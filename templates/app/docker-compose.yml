@@ -1,0 +1,29 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "44304:80"
+      - "44305:443"
+    depends_on:
+      - db
+      - some-redis
+    environment:
+      - "ASPNETCORE_URLS=https://+;http://+"
+      - "ASPNETCORE_HTTPS_PORT=443"
+      - Kestrel__Certificates__Default__Path=/app/certs/dev-cert.pfx
+      - Kestrel__Certificates__Default__Password=SecretPassword
+
+  db:
+    image: "mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04"
+    environment:
+      SA_PASSWORD: "myPassw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1500-1600:1400-1500"
+    volumes:
+      - ./docker-volumes/mssql/volumes/data:/var/opt/mssql
+  some-redis:
+    image: "redis"
+    ports:
+      - "7379:6379"
