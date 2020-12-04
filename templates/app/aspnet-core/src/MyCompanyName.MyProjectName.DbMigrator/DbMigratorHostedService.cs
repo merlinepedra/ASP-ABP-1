@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,10 +12,12 @@ namespace MyCompanyName.MyProjectName.DbMigrator
     public class DbMigratorHostedService : IHostedService
     {
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
+        private readonly IServiceProvider _serviceProvider;
 
-        public DbMigratorHostedService(IHostApplicationLifetime hostApplicationLifetime)
+        public DbMigratorHostedService(IHostApplicationLifetime hostApplicationLifetime, IServiceProvider serviceProvider)
         {
             _hostApplicationLifetime = hostApplicationLifetime;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -23,6 +26,8 @@ namespace MyCompanyName.MyProjectName.DbMigrator
             {
                 options.UseAutofac();
                 options.Services.AddLogging(c => c.AddSerilog());
+                options.Configuration.EnvironmentName = _serviceProvider.GetRequiredService<IHostEnvironment>().EnvironmentName;
+                options.Configuration.UserSecretsAssembly = typeof(DbMigratorHostedService).Assembly;
             }))
             {
                 application.Initialize();
