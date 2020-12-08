@@ -79,14 +79,26 @@
                 var displayName = $(this).data("autocompleteDisplayProperty");
                 var displayValue = $(this).data("autocompleteValueProperty");
                 var itemsPropertyName = $(this).data("autocompleteItemsProperty");
+                var filterParamName = $(this).data("autocompleteFilterParamName");
+                var selectedText = $(this).data("autocompleteSelectedItemName");
+                var name = $(this).attr("name");
+                var selectedTextInputName = name.substring(0, name.length - 1) + "_Text]";
+                var selectedTextInput = $('<input>', {
+                    type: 'hidden',
+                    id: selectedTextInputName,
+                    name: selectedTextInputName,
+                });
+                if (selectedText != "") {
+                    selectedTextInput.val(selectedText);
+                }
+                selectedTextInput.insertAfter($select);
                 $select.select2({
                     ajax: {
                         url: url,
                         dataType: "json",
                         data: function (params) {
-                            var query = {
-                                search: params.term
-                            };
+                            var query = {};
+                            query[filterParamName] = params.term;
                             return query;
                         },
                         processResults: function (data) {
@@ -95,7 +107,7 @@
                             if (itemsPropertyName) {
                                 items = data[itemsPropertyName];
                             }
-                            
+
                             items.forEach(function (item, index) {
                                 retVal.push({
                                     id: item[displayValue],
@@ -108,6 +120,9 @@
                         }
                     },
                     width: '100%'
+                });
+                $select.on('select2:select', function (e) {
+                    selectedTextInput.val(e.params.data.text);
                 });
             });
         }

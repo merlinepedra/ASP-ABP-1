@@ -100,36 +100,6 @@ this.localizationService.get('Resource::Key');
 this.localizationService.get({ key: 'Resource::Key', defaultValue: 'Default Value' });
 ```
 
-### Using the Config State
-
-In order to you `getLocalization` method you should import ConfigState.
-
-```js
-import { ConfigState } from '@abp/ng.core';
-```
-
-Then you can use it as followed:
-
-```js
-this.store.selectSnapshot(ConfigState.getLocalization('ResourceName::Key'));
-```
-
-`getLocalization` method can be used with both `localization key` and [`LocalizationWithDefault`](https://github.com/abpframework/abp/blob/dev/npm/ng-packs/packages/core/src/lib/models/config.ts#L34) interface.
-
-```js
-this.store.selectSnapshot(
-  ConfigState.getLocalization(
-    {
-      key: 'AbpIdentity::UserDeletionConfirmation',
-      defaultValue: 'Default Value',
-    },
-    'John',
-  ),
-);
-```
-
-Localization resources are stored in the `localization` property of `ConfigState`.
-
 ## RTL Support
 
 As of v2.9 ABP has RTL support. If you are generating a new project with v2.9 and above, everything is set, you do not need to do any changes. If you are migrating your project from an earlier version, please follow the 2 steps below:
@@ -199,7 +169,7 @@ Since ABP has more than one language, Angular locale files loads lazily using [W
 
 ### registerLocaleFn
 
-A `registerLocaleFn` is a higher order function that accepts `cultureNameLocaleFileMap` object and `errorHandlerFn` function as params and returns Webpack import function. A `registerLocale` function must be passed to the `forRoot` of the `CoreModule` as shown below:
+`registerLocale` function that exported from `@abp/ng.core/locale` package is a higher order function that accepts `cultureNameLocaleFileMap` object and `errorHandlerFn` function as params and returns Webpack `import` function. A `registerLocale` function must be passed to the `forRoot` of the `CoreModule` as shown below:
 
 ```js
 // app.module.ts

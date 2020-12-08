@@ -41,6 +41,7 @@ Here, the list of all available commands before explaining their details:
 * **`login`**: Authenticates on your computer with your [abp.io](https://abp.io/) username and password.
 * **`logout`**: Logouts from your computer if you've authenticated before.
 * **`build`**: Builds a GIT repository and depending repositories or a single .NET solution.
+* **`bundle`**: Generates script and style references for an ABP Blazor project. 
 
 ### help
 
@@ -106,6 +107,7 @@ abp new Acme.BookStore
 * `--create-solution-folder` or `-csf`: Specifies if the project will be in a new folder in the output folder or directly the output folder.
 * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True;MultipleActiveResultSets=true` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](Entity-Framework-Core-Other-DBMS.md) (after creating the solution).
 * `--local-framework-ref --abp-path`: Uses local projects references to the ABP framework instead of using the NuGet packages. This can be useful if you download the ABP Framework source code and have a local reference to the framework from your application.
+* `--no-random-port`: Uses template's default ports.
 
 ### update
 
@@ -400,3 +402,20 @@ abp build --build-name "prod" --dotnet-build-arguments "\"--no-dependencies\""
 
 For more details, see [build command documentation](CLI-BuildCommand.md).
 
+
+#### bundle
+
+This command generates script and style references for an ABP Blazor project and updates the **index.html** file. It helps developers to manage dependencies required by ABP modules easily.  In order ```bundle``` command to work, its **executing directory** or passed ```--working-directory``` parameter's directory must contain a Blazor project file(*.csproj).
+
+Usage:
+
+````bash
+abp bundle [options]
+````
+
+#### Options
+
+* ```--working-directory``` or ```-wd```: Specifies the working directory. This option is useful when executing directory doesn't contain a Blazor project file.
+* ```--force``` or ```-f```: Forces to build project before generating references.
+
+For more details about managing style and script references in Blazor apps, see [Managing Global Scripts & Styles](UI/Blazor/Global-Scripts-Styles.md)

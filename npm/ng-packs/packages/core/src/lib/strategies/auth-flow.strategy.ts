@@ -1,14 +1,10 @@
 import { Injector } from '@angular/core';
-import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { AuthConfig, OAuthService, OAuthStorage } from 'angular-oauth2-oidc';
 import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
 import { RestOccurError } from '../actions/rest.actions';
-import { ApplicationConfigurationService } from '../services/application-configuration.service';
 import { ConfigStateService } from '../services/config-state.service';
 import { EnvironmentService } from '../services/environment.service';
-import { RestService } from '../services/rest.service';
 
 export const oAuthStorage = localStorage;
 
@@ -18,7 +14,6 @@ export abstract class AuthFlowStrategy {
   protected store: Store;
   protected environment: EnvironmentService;
   protected configState: ConfigStateService;
-  protected appConfigService: ApplicationConfigurationService;
   protected oAuthService: OAuthService;
   protected oAuthConfig: AuthConfig;
   abstract checkIfInternalAuth(): boolean;
@@ -32,7 +27,6 @@ export abstract class AuthFlowStrategy {
     this.store = injector.get(Store);
     this.environment = injector.get(EnvironmentService);
     this.configState = injector.get(ConfigStateService);
-    this.appConfigService = injector.get(ApplicationConfigurationService);
     this.oAuthService = injector.get(OAuthService);
     this.oAuthConfig = this.environment.getEnvironment().oAuthConfig;
   }
@@ -83,48 +77,9 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   destroy() {}
 }
 
-export class AuthPasswordFlowStrategy extends AuthFlowStrategy {
-  readonly isInternalAuth = true;
-
-  login() {
-    const router = this.injector.get(Router);
-    router.navigateByUrl('/account/login');
-  }
-
-  checkIfInternalAuth() {
-    return true;
-  }
-
-  logout() {
-    const rest = this.injector.get(RestService);
-
-    const issuer = this.environment.getEnvironment().oAuthConfig.issuer;
-    return rest
-      .request(
-        {
-          method: 'GET',
-          url: '/api/account/logout',
-        },
-        null,
-        issuer,
-      )
-      .pipe(
-        tap(() => this.oAuthService.logOut()),
-        switchMap(() =>
-          this.appConfigService.getConfiguration().pipe(tap(res => this.configState.setState(res))),
-        ),
-      );
-  }
-
-  destroy() {}
-}
-
 export const AUTH_FLOW_STRATEGY = {
   Code(injector: Injector) {
     return new AuthCodeFlowStrategy(injector);
-  },
-  Password(injector: Injector) {
-    return new AuthPasswordFlowStrategy(injector);
   },
 };
 

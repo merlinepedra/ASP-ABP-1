@@ -1,19 +1,25 @@
 import {
-  ApplicationConfiguration,
-  ApplicationConfigurationService,
+  AbpApplicationConfigurationService,
   ConfigStateService,
+  CurrentUserDto,
 } from '@abp/ng.core';
 import { LocaleDirection } from '@abp/ng.theme.shared';
-import { Component, EventEmitter, Input, Output, Renderer2, TrackByFunction } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TrackByFunction } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { finalize, map, pluck, switchMap, take, tap } from 'rxjs/operators';
 import { GetPermissions, UpdatePermissions } from '../actions/permission-management.actions';
 import { PermissionManagement } from '../models/permission-management';
-import { UpdatePermissionDto } from '../proxy/models';
+import {
+  GetPermissionListResultDto,
+  PermissionGrantInfoDto,
+  PermissionGroupDto,
+  ProviderInfoDto,
+  UpdatePermissionDto,
+} from '../proxy/models';
 import { PermissionManagementState } from '../states/permission-management.state';
 
-type PermissionWithStyle = PermissionManagement.Permission & {
+type PermissionWithStyle = PermissionGrantInfoDto & {
   style: string;
 };
 
@@ -68,14 +74,14 @@ export class PermissionManagementComponent
   @Output() readonly visibleChange = new EventEmitter<boolean>();
 
   @Select(PermissionManagementState.getPermissionGroups)
-  groups$: Observable<PermissionManagement.Group[]>;
+  groups$: Observable<PermissionGroupDto[]>;
 
   @Select(PermissionManagementState.getEntityDisplayName)
   entityName$: Observable<string>;
 
-  selectedGroup: PermissionManagement.Group;
+  selectedGroup: PermissionGroupDto;
 
-  permissions: PermissionManagement.Permission[] = [];
+  permissions: PermissionGrantInfoDto[] = [];
 
   selectThisTab = false;
 
@@ -83,7 +89,7 @@ export class PermissionManagementComponent
 
   modalBusy = false;
 
-  trackByFn: TrackByFunction<PermissionManagement.Group> = (_, item) => item.name;
+  trackByFn: TrackByFunction<PermissionGroupDto> = (_, item) => item.name;
 
   get selectedGroupPermissions$(): Observable<PermissionWithStyle[]> {
     const margin = `margin-${
@@ -96,7 +102,7 @@ export class PermissionManagementComponent
           ? groups.find(group => group.name === this.selectedGroup.name).permissions
           : [],
       ),
-      map<PermissionManagement.Permission[], PermissionWithStyle[]>(permissions =>
+      map<PermissionGrantInfoDto[], PermissionWithStyle[]>(permissions =>
         permissions.map(
           permission =>
             (({
@@ -112,21 +118,21 @@ export class PermissionManagementComponent
   constructor(
     protected store: Store,
     protected configState: ConfigStateService,
-    protected appConfigService: ApplicationConfigurationService,
+    protected appConfigService: AbpApplicationConfigurationService,
   ) {}
 
   getChecked(name: string) {
     return (this.permissions.find(per => per.name === name) || { isGranted: false }).isGranted;
   }
 
-  isGrantedByOtherProviderName(grantedProviders: PermissionManagement.GrantedProvider[]): boolean {
+  isGrantedByOtherProviderName(grantedProviders: ProviderInfoDto[]): boolean {
     if (grantedProviders.length) {
       return grantedProviders.findIndex(p => p.providerName !== this.providerName) > -1;
     }
     return false;
   }
 
-  onClickCheckbox(clickedPermission: PermissionManagement.Permission, value) {
+  onClickCheckbox(clickedPermission: PermissionGrantInfoDto, value) {
     if (
       clickedPermission.isGranted &&
       this.isGrantedByOtherProviderName(clickedPermission.grantedProviders)
@@ -212,7 +218,7 @@ export class PermissionManagementComponent
     this.selectThisTab = !this.selectAllTab;
   }
 
-  onChangeGroup(group: PermissionManagement.Group) {
+  onChangeGroup(group: PermissionGroupDto) {
     this.selectedGroup = group;
     this.setTabCheckboxState();
   }
@@ -248,9 +254,7 @@ export class PermissionManagementComponent
       .pipe(
         switchMap(() =>
           this.shouldFetchAppConfig()
-            ? this.appConfigService
-                .getConfiguration()
-                .pipe(tap(res => this.configState.setState(res)))
+            ? this.appConfigService.get().pipe(tap(res => this.configState.setState(res)))
             : of(null),
         ),
         finalize(() => (this.modalBusy = false)),
@@ -274,7 +278,7 @@ export class PermissionManagementComponent
       )
       .pipe(
         pluck('PermissionManagementState', 'permissionRes'),
-        tap((permissionRes: PermissionManagement.Response) => {
+        tap((permissionRes: GetPermissionListResultDto) => {
           this.selectedGroup = permissionRes.groups[0];
           this.permissions = getPermissions(permissionRes.groups);
         }),
@@ -294,9 +298,7 @@ export class PermissionManagementComponent
   }
 
   shouldFetchAppConfig() {
-    const currentUser = this.configState.getOne(
-      'currentUser',
-    ) as ApplicationConfiguration.CurrentUser;
+    const currentUser = this.configState.getOne('currentUser') as CurrentUserDto;
 
     if (this.providerName === 'R') return currentUser.roles.some(role => role === this.providerKey);
 
@@ -306,10 +308,7 @@ export class PermissionManagementComponent
   }
 }
 
-function findMargin(
-  permissions: PermissionManagement.Permission[],
-  permission: PermissionManagement.Permission,
-) {
+function findMargin(permissions: PermissionGrantInfoDto[], permission: PermissionGrantInfoDto) {
   const parentPermission = permissions.find(per => per.name === permission.parentName);
 
   if (parentPermission && parentPermission.parentName) {
@@ -320,6 +319,6 @@ function findMargin(
   return parentPermission ? 20 : 0;
 }
 
-function getPermissions(groups: PermissionManagement.Group[]): PermissionManagement.Permission[] {
+function getPermissions(groups: PermissionGroupDto[]): PermissionGrantInfoDto[] {
   return groups.reduce((acc, val) => [...acc, ...val.permissions], []);
 }
