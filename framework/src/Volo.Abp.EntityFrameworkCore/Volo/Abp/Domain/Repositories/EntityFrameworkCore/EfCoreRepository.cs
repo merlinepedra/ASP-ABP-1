@@ -15,7 +15,9 @@ using Volo.Abp.Guids;
 
 namespace Volo.Abp.Domain.Repositories.EntityFrameworkCore
 {
-    public class EfCoreRepository<TDbContext, TEntity> : RepositoryBase<TEntity>, IEfCoreRepository<TEntity>, IAsyncEnumerable<TEntity>
+    public class EfCoreRepository<TDbContext, TEntity> :
+        RepositoryBase<TEntity>, IEfCoreRepository<TEntity>,
+        IAsyncEnumerable<TEntity>
         where TDbContext : IEfCoreDbContext
         where TEntity : class, IEntity
     {
@@ -32,7 +34,7 @@ namespace Volo.Abp.Domain.Repositories.EntityFrameworkCore
 
         protected virtual Task<TDbContext> GetDbContextAsync()
         {
-            return _dbContextProvider.GetDbContextAsync();
+            return _dbContextProvider.GetInitializedAsync();
         }
 
         [Obsolete("Use GetDbSetAsync() method.")]
@@ -225,10 +227,21 @@ namespace Volo.Abp.Domain.Repositories.EntityFrameworkCore
                 .ToListAsync(GetCancellationToken(cancellationToken));
         }
 
+        protected override IQueryable<TEntity> GetLazyInitialedQueryable()
+        {
+            return _dbContextProvider.Get().Set<TEntity>();
+        }
+
         [Obsolete("Use GetQueryableAsync method.")]
         protected override IQueryable<TEntity> GetQueryable()
         {
             return DbSet.AsQueryable();
+        }
+
+        protected override Task EnsureQueryInitializedAsync()
+        {
+            //TODO: We may consider to remove the parameter of _dbContextProvider.EnsureInitializedAsync
+            return _dbContextProvider.EnsureInitializedAsync(_dbContextProvider.Get());
         }
 
         public override async Task<IQueryable<TEntity>> GetQueryableAsync()
@@ -335,6 +348,11 @@ namespace Volo.Abp.Domain.Repositories.EntityFrameworkCore
                 await GetQueryableAsync(),
                 propertySelectors
             );
+        }
+
+        public override IAbpQueryable<TEntity> Wrap(IQueryable<TEntity> queryable)
+        {
+            return new EfCoreAbpQueryableWrapper<TEntity>(queryable, this);
         }
 
         private static IQueryable<TEntity> IncludeDetails(

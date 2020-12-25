@@ -6,15 +6,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Linq;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Uow;
 
 namespace Volo.Abp.Domain.Repositories
 {
-    public abstract class RepositoryBase<TEntity> : BasicRepositoryBase<TEntity>, IRepository<TEntity>, IUnitOfWorkManagerAccessor
+    public abstract class RepositoryBase<TEntity> :
+        BasicRepositoryBase<TEntity>,
+        IRepository<TEntity>,
+        IUnitOfWorkManagerAccessor,
+        ILazyInitializedQueryProvider<TEntity>
         where TEntity : class, IEntity
     {
         [Obsolete("This method will be removed in future versions.")]
@@ -48,6 +50,8 @@ namespace Volo.Abp.Domain.Repositories
             return GetQueryableAsync();
         }
 
+        public abstract IAbpQueryable<TEntity> Wrap(IQueryable<TEntity> queryable);
+
         [Obsolete("This method will be removed in future versions.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -59,6 +63,19 @@ namespace Volo.Abp.Domain.Repositories
         {
             return GetQueryable().GetEnumerator();
         }
+
+        Task ILazyInitializedQueryProvider<TEntity>.EnsureInitializedAsync()
+        {
+            return EnsureQueryInitializedAsync();
+        }
+
+        IQueryable<TEntity> ILazyInitializedQueryProvider<TEntity>.GetQueryable()
+        {
+            return GetLazyInitialedQueryable();
+        }
+
+        protected abstract Task EnsureQueryInitializedAsync();
+        protected abstract IQueryable<TEntity> GetLazyInitialedQueryable();
 
         [Obsolete("Use GetQueryableAsync method.")]
         protected abstract IQueryable<TEntity> GetQueryable();

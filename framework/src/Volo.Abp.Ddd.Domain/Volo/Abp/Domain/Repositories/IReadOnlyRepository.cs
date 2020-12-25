@@ -7,7 +7,7 @@ using Volo.Abp.Linq;
 
 namespace Volo.Abp.Domain.Repositories
 {
-    public interface IReadOnlyRepository<TEntity> : IQueryable<TEntity>, IReadOnlyBasicRepository<TEntity>
+    public interface IReadOnlyRepository<TEntity> : IAbpQueryable<TEntity>, IReadOnlyBasicRepository<TEntity>
         where TEntity : class, IEntity
     {
         IAsyncQueryableExecuter AsyncExecuter { get; }

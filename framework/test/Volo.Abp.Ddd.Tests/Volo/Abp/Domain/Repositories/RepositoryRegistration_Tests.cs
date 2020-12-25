@@ -241,9 +241,18 @@ namespace Volo.Abp.Domain.Repositories
         public class MyTestDefaultRepository<TEntity> : RepositoryBase<TEntity>
             where TEntity : class, IEntity
         {
+            protected override IQueryable<TEntity> GetLazyInitialedQueryable()
+            {
+                throw new NotImplementedException();
+            }
 
             [Obsolete("Use GetQueryableAsync method.")]
             protected override IQueryable<TEntity> GetQueryable()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task EnsureQueryInitializedAsync()
             {
                 throw new NotImplementedException();
             }

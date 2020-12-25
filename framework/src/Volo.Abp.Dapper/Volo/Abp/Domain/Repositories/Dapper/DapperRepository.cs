@@ -21,11 +21,11 @@ namespace Volo.Abp.Domain.Repositories.Dapper
         [Obsolete("Use GetDbConnectionAsync method.")]
         public IDbConnection DbConnection => _dbContextProvider.GetDbContext().Database.GetDbConnection();
 
-        public async Task<IDbConnection> GetDbConnectionAsync() => (await _dbContextProvider.GetDbContextAsync()).Database.GetDbConnection();
+        public async Task<IDbConnection> GetDbConnectionAsync() => (await _dbContextProvider.GetInitializedAsync()).Database.GetDbConnection();
 
         [Obsolete("Use GetDbTransactionAsync method.")]
         public IDbTransaction DbTransaction => _dbContextProvider.GetDbContext().Database.CurrentTransaction?.GetDbTransaction();
 
-        public async Task<IDbTransaction> GetDbTransactionAsync() => (await _dbContextProvider.GetDbContextAsync()).Database.CurrentTransaction?.GetDbTransaction();
+        public async Task<IDbTransaction> GetDbTransactionAsync() => (await _dbContextProvider.GetInitializedAsync()).Database.CurrentTransaction?.GetDbTransaction();
     }
 }

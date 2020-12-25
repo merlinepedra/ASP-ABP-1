@@ -58,10 +58,20 @@ namespace Volo.Abp.Domain.Repositories.MemoryDb
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
         }
 
+        protected override IQueryable<TEntity> GetLazyInitialedQueryable()
+        {
+            throw new NotImplementedException();
+        }
+
         [Obsolete("This method will be removed in future versions.")]
         protected override IQueryable<TEntity> GetQueryable()
         {
             return ApplyDataFilters(Collection.AsQueryable());
+        }
+
+        protected override Task EnsureQueryInitializedAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public override async Task<IQueryable<TEntity>> GetQueryableAsync()

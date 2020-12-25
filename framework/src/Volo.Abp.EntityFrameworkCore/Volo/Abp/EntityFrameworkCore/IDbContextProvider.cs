@@ -9,6 +9,13 @@ namespace Volo.Abp.EntityFrameworkCore
         [Obsolete("Use GetDbContextAsync method.")]
         TDbContext GetDbContext();
 
+        [Obsolete("Use GetInitializedAsync method.")]
         Task<TDbContext> GetDbContextAsync();
+
+        TDbContext Get();
+
+        Task<TDbContext> GetInitializedAsync();
+
+        Task EnsureInitializedAsync(TDbContext dbContext);
     }
 }

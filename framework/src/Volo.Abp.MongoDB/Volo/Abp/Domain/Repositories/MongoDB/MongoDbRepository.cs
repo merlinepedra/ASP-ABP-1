@@ -436,10 +436,20 @@ namespace Volo.Abp.Domain.Repositories.MongoDB
             }
         }
 
+        protected override IQueryable<TEntity> GetLazyInitialedQueryable()
+        {
+            throw new NotImplementedException();
+        }
+
         [Obsolete("Use GetQueryableAsync method.")]
         protected override IQueryable<TEntity> GetQueryable()
         {
             return GetMongoQueryable();
+        }
+
+        protected override Task EnsureQueryInitializedAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public override async Task<IQueryable<TEntity>> GetQueryableAsync()

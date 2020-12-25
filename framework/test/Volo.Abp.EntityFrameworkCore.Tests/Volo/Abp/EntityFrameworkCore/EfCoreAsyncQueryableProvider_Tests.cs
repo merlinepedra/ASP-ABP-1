@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Shouldly;
 using Volo.Abp.Domain.Repositories;
@@ -24,28 +23,31 @@ namespace Volo.Abp.EntityFrameworkCore
         }
 
         [Fact]
-        public void Should_Accept_EfCore_Related_Queries()
+        public async Task Should_Accept_EfCore_Related_Queries()
         {
-            var query = _personRepository.Where(p => p.Age > 0);
-            
-            _efCoreAsyncQueryableProvider.CanExecute(query).ShouldBeTrue();
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var query = _personRepository.Where(p => p.Age > 0);
+                _efCoreAsyncQueryableProvider.CanExecute(query).ShouldBeTrue();
+
+                await uow.CompleteAsync();
+            }
         }
 
         [Fact]
         public void Should_Not_Accept_Other_Providers()
         {
             var query = new[] {1, 2, 3}.AsQueryable().Where(x => x > 0);
-            
+
             _efCoreAsyncQueryableProvider.CanExecute(query).ShouldBeFalse();
         }
-        
+
         [Fact]
         public async Task Should_Execute_Queries()
         {
             using (var uow = _unitOfWorkManager.Begin())
             {
                 var query = _personRepository.Where(p => p.Age > 0);
-            
                 (await _efCoreAsyncQueryableProvider.CountAsync(query) > 0).ShouldBeTrue();
                 (await _efCoreAsyncQueryableProvider.FirstOrDefaultAsync(query)).ShouldNotBeNull();
                 (await _efCoreAsyncQueryableProvider.ToListAsync(query)).Count.ShouldBeGreaterThan(0);

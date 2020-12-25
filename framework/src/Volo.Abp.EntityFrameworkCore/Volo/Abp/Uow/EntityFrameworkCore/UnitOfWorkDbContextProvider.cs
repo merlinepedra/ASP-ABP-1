@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +14,6 @@ using Volo.Abp.Threading;
 
 namespace Volo.Abp.Uow.EntityFrameworkCore
 {
-    //TODO: Implement logic in DefaultDbContextResolver.Resolve in old ABP.
-
     public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
         where TDbContext : IEfCoreDbContext
     {
@@ -87,6 +86,116 @@ namespace Volo.Abp.Uow.EntityFrameworkCore
             }
 
             return ((EfCoreDatabaseApi<TDbContext>)databaseApi).DbContext;
+        }
+
+        public TDbContext Get()
+        {
+            var unitOfWork = _unitOfWorkManager.Current;
+            if (unitOfWork == null)
+            {
+                throw new AbpException("A DbContext can only be created inside a unit of work!");
+            }
+
+            var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
+            var connectionString = _connectionStringResolver.Resolve(connectionStringName);
+
+            var dbContextKey = $"{typeof(TDbContext).FullName}_{connectionString}";
+
+            var databaseApi = unitOfWork.GetOrAddDatabaseApi(
+                dbContextKey,
+                () => new EfCoreDatabaseApi<TDbContext>(
+                    CreateDbContextWithoutTransaction(unitOfWork, connectionStringName, connectionString)
+                ));
+
+            return ((EfCoreDatabaseApi<TDbContext>)databaseApi).DbContext;
+        }
+
+        private static TDbContext CreateDbContextWithoutTransaction(
+            IUnitOfWork unitOfWork,
+            string connectionStringName,
+            string connectionString)
+        {
+            var creationContext = new DbContextCreationContext(connectionStringName, connectionString);
+            using (DbContextCreationContext.Use(creationContext))
+            {
+                var transactionApiKey = $"EntityFrameworkCore_{connectionString}";
+                if (unitOfWork.FindTransactionApi(transactionApiKey) is EfCoreTransactionApi activeTransaction)
+                {
+                    DbContextCreationContext.Current.ExistingConnection = activeTransaction.DbContextTransaction.GetDbTransaction().Connection;
+                }
+
+                var dbContext = unitOfWork.ServiceProvider.GetRequiredService<TDbContext>();
+
+                if (dbContext is IAbpEfCoreDbContext abpEfCoreDbContext)
+                {
+                    abpEfCoreDbContext.Initialize(
+                        new AbpEfCoreDbContextInitializationContext(
+                            unitOfWork
+                        )
+                    );
+                }
+
+                return dbContext;
+            }
+        }
+
+        public async Task<TDbContext> GetInitializedAsync()
+        {
+            var dbContext = Get();
+            await EnsureInitializedAsync(dbContext);
+            return dbContext;
+        }
+
+        public async Task EnsureInitializedAsync(TDbContext dbContext)
+        {
+            var unitOfWork = _unitOfWorkManager.Current;
+            if (unitOfWork == null)
+            {
+                throw new AbpException("A DbContext can only be created inside a unit of work!");
+            }
+
+            var initializedDbContexts = unitOfWork.GetOrAddItem("InitializedDbContexts", _ => new HashSet<object>());
+            if (initializedDbContexts.Contains(dbContext))
+            {
+                return;
+            }
+
+            if (unitOfWork.Options.IsTransactional)
+            {
+                //TODO: Don't trust to dbContext.Database.GetConnectionString()
+                var transactionApiKey = $"EntityFrameworkCore_{dbContext.Database.GetConnectionString()}";
+                var activeTransaction = unitOfWork.FindTransactionApi(transactionApiKey) as EfCoreTransactionApi;
+
+                if (activeTransaction == null)
+                {
+                    var dbTransaction = unitOfWork.Options.IsolationLevel.HasValue
+                        ? await dbContext.Database.BeginTransactionAsync(unitOfWork.Options.IsolationLevel.Value, GetCancellationToken())
+                        : await dbContext.Database.BeginTransactionAsync(GetCancellationToken());
+
+                    unitOfWork.AddTransactionApi(
+                        transactionApiKey,
+                        new EfCoreTransactionApi(
+                            dbTransaction,
+                            dbContext
+                        )
+                    );
+                }
+                else
+                {
+                    if (dbContext.As<DbContext>().HasRelationalTransactionManager())
+                    {
+                        await dbContext.Database.UseTransactionAsync(activeTransaction.DbContextTransaction.GetDbTransaction(), GetCancellationToken());
+                    }
+                    else
+                    {
+                        await dbContext.Database.BeginTransactionAsync(GetCancellationToken()); //TODO: Why not using the new created transaction?
+                    }
+
+                    activeTransaction.AttendedDbContexts.Add(dbContext);
+                }
+            }
+
+            initializedDbContexts.Add(dbContext);
         }
 
         private TDbContext CreateDbContext(IUnitOfWork unitOfWork, string connectionStringName, string connectionString)
