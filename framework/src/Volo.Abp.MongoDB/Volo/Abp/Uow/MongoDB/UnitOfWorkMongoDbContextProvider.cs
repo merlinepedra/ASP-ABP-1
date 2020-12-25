@@ -93,8 +93,89 @@ namespace Volo.Abp.Uow.MongoDB
             return ((MongoDbDatabaseApi<TMongoDbContext>) databaseApi).DbContext;
         }
 
-        [Obsolete("Use CreateDbContextAsync")]
+        public TMongoDbContext Get()
+        {
+            var unitOfWork = _unitOfWorkManager.Current;
+            if (unitOfWork == null)
+            {
+                throw new AbpException(
+                    $"A {nameof(IMongoDatabase)} instance can only be created inside a unit of work!");
+            }
 
+            var connectionString = _connectionStringResolver.Resolve<TMongoDbContext>();
+            var dbContextKey = $"{typeof(TMongoDbContext).FullName}_{connectionString}";
+
+            var mongoUrl = new MongoUrl(connectionString);
+            var databaseName = mongoUrl.DatabaseName;
+            if (databaseName.IsNullOrWhiteSpace())
+            {
+                databaseName = ConnectionStringNameAttribute.GetConnStringName<TMongoDbContext>();
+            }
+
+            //TODO: Create only single MongoDbClient per connection string in an application (extract MongoClientCache for example).
+            var databaseApi = unitOfWork.GetOrAddDatabaseApi(
+                dbContextKey,
+                () => new MongoDbDatabaseApi<TMongoDbContext>(CreateDbContextWithoutTransaction(unitOfWork, mongoUrl, databaseName)));
+
+            return ((MongoDbDatabaseApi<TMongoDbContext>) databaseApi).DbContext;
+        }
+
+        private static TMongoDbContext CreateDbContextWithoutTransaction(IUnitOfWork unitOfWork, MongoUrl mongoUrl, string databaseName)
+        {
+            var dbContext = unitOfWork.ServiceProvider.GetRequiredService<TMongoDbContext>();
+
+            var client = new MongoClient(mongoUrl);
+            var database = client.GetDatabase(databaseName);
+            dbContext.ToAbpMongoDbContext().InitializeDatabase(mongoUrl.Url, database, client, null);
+            return dbContext;
+        }
+
+        public async Task<TMongoDbContext> GetInitializedAsync(CancellationToken cancellationToken = default)
+        {
+            var dbContext = Get();
+            await EnsureInitializedAsync(dbContext, cancellationToken);
+            return dbContext;
+        }
+
+        public async Task EnsureInitializedAsync(TMongoDbContext dbContext, CancellationToken cancellationToken = default)
+        {
+            var unitOfWork = _unitOfWorkManager.Current;
+            if (unitOfWork == null)
+            {
+                throw new AbpException(
+                    $"A {nameof(IMongoDatabase)} instance can only be created inside a unit of work!");
+            }
+
+            var mongoDbContext = dbContext.ToAbpMongoDbContext();
+
+            var transactionApiKey = $"MongoDb_{mongoDbContext.MongoUrl}";
+            var activeTransaction = unitOfWork.FindTransactionApi(transactionApiKey) as MongoDbTransactionApi;
+
+            if (activeTransaction?.SessionHandle == null)
+            {
+                var session = await mongoDbContext.Client.StartSessionAsync(cancellationToken: cancellationToken);
+
+                if (unitOfWork.Options.Timeout.HasValue)
+                {
+                    session.AdvanceOperationTime(new BsonTimestamp(unitOfWork.Options.Timeout.Value));
+                }
+
+                session.StartTransaction();
+
+                unitOfWork.AddTransactionApi(
+                    transactionApiKey,
+                    new MongoDbTransactionApi(session)
+                );
+
+                mongoDbContext.SessionHandle = session;
+            }
+            else
+            {
+                mongoDbContext.SessionHandle = activeTransaction.SessionHandle;
+            }
+        }
+
+        [Obsolete("Use CreateDbContextAsync")]
         private TMongoDbContext CreateDbContext(IUnitOfWork unitOfWork, MongoUrl mongoUrl, string databaseName)
         {
             var client = new MongoClient(mongoUrl);
@@ -106,7 +187,7 @@ namespace Volo.Abp.Uow.MongoDB
             }
 
             var dbContext = unitOfWork.ServiceProvider.GetRequiredService<TMongoDbContext>();
-            dbContext.ToAbpMongoDbContext().InitializeDatabase(database, client, null);
+            dbContext.ToAbpMongoDbContext().InitializeDatabase(mongoUrl.Url, database, client, null);
 
             return dbContext;
         }
@@ -132,7 +213,7 @@ namespace Volo.Abp.Uow.MongoDB
             }
 
             var dbContext = unitOfWork.ServiceProvider.GetRequiredService<TMongoDbContext>();
-            dbContext.ToAbpMongoDbContext().InitializeDatabase(database, client, null);
+            dbContext.ToAbpMongoDbContext().InitializeDatabase(mongoUrl.Url, database, client, null);
 
             return dbContext;
         }
@@ -164,11 +245,11 @@ namespace Volo.Abp.Uow.MongoDB
                     new MongoDbTransactionApi(session)
                 );
 
-                dbContext.ToAbpMongoDbContext().InitializeDatabase(database, client, session);
+                dbContext.ToAbpMongoDbContext().InitializeDatabase(url.Url, database, client, session);
             }
             else
             {
-                dbContext.ToAbpMongoDbContext().InitializeDatabase(database, client, activeTransaction.SessionHandle);
+                dbContext.ToAbpMongoDbContext().InitializeDatabase(url.Url, database, client, activeTransaction.SessionHandle);
             }
 
             return dbContext;
@@ -201,11 +282,11 @@ namespace Volo.Abp.Uow.MongoDB
                     new MongoDbTransactionApi(session)
                 );
 
-                dbContext.ToAbpMongoDbContext().InitializeDatabase(database, client, session);
+                dbContext.ToAbpMongoDbContext().InitializeDatabase(url.Url, database, client, session);
             }
             else
             {
-                dbContext.ToAbpMongoDbContext().InitializeDatabase(database, client, activeTransaction.SessionHandle);
+                dbContext.ToAbpMongoDbContext().InitializeDatabase(url.Url, database, client, activeTransaction.SessionHandle);
             }
 
             return dbContext;

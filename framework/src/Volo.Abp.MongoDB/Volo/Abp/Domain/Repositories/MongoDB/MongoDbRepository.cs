@@ -56,7 +56,7 @@ namespace Volo.Abp.Domain.Repositories.MongoDB
 
         protected Task<TMongoDbContext> GetDbContextAsync(CancellationToken cancellationToken = default)
         {
-            return DbContextProvider.GetDbContextAsync(GetCancellationToken(cancellationToken));
+            return DbContextProvider.GetInitializedAsync(GetCancellationToken(cancellationToken));
         }
 
         protected IMongoDbContextProvider<TMongoDbContext> DbContextProvider { get; }
@@ -437,6 +437,12 @@ namespace Volo.Abp.Domain.Repositories.MongoDB
         }
 
         protected override IQueryable<TEntity> GetLazyInitialedQueryable()
+        {
+            //TODO: Filters
+            return DbContextProvider.Get().Collection<TEntity>().AsQueryable();
+        }
+
+        public override IAbpQueryable<TEntity> Wrap(IQueryable<TEntity> queryable)
         {
             throw new NotImplementedException();
         }

@@ -63,6 +63,11 @@ namespace Volo.Abp.Domain.Repositories.MemoryDb
             throw new NotImplementedException();
         }
 
+        public override IAbpQueryable<TEntity> Wrap(IQueryable<TEntity> queryable)
+        {
+            throw new NotImplementedException();
+        }
+
         [Obsolete("This method will be removed in future versions.")]
         protected override IQueryable<TEntity> GetQueryable()
         {

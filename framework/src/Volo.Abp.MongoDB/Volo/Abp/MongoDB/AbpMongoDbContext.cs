@@ -12,15 +12,22 @@ namespace Volo.Abp.MongoDB
 
         public IMongoDatabase Database { get; private set; }
 
-        public IClientSessionHandle SessionHandle { get; private set; }
+        public string MongoUrl { get; private set; }
+
+        public IClientSessionHandle SessionHandle { get; internal set; }
 
         protected internal virtual void CreateModel(IMongoModelBuilder modelBuilder)
         {
 
         }
 
-        public virtual void InitializeDatabase(IMongoDatabase database, IMongoClient client, IClientSessionHandle sessionHandle)
+        public virtual void InitializeDatabase(
+            string mongoUrl,
+            IMongoDatabase database,
+            IMongoClient client,
+            IClientSessionHandle sessionHandle)
         {
+            MongoUrl = mongoUrl;
             Database = database;
             Client = client;
             SessionHandle = sessionHandle;

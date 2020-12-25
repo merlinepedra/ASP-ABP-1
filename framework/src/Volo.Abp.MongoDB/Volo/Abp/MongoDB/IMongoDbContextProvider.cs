@@ -10,6 +10,13 @@ namespace Volo.Abp.MongoDB
         [Obsolete("Use CreateDbContextAsync")]
         TMongoDbContext GetDbContext();
 
+        [Obsolete("Use GetInitializedAsync method.")]
         Task<TMongoDbContext> GetDbContextAsync(CancellationToken cancellationToken = default);
+
+        TMongoDbContext Get();
+
+        Task<TMongoDbContext> GetInitializedAsync(CancellationToken cancellationToken = default);
+
+        Task EnsureInitializedAsync(TMongoDbContext dbContext, CancellationToken cancellationToken = default);
     }
 }
