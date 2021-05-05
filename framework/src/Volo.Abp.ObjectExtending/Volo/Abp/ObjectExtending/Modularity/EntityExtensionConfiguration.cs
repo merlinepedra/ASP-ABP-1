@@ -1,8 +1,8 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using JetBrains.Annotations;
-using Volo.Abp.Localization;
+using System.Linq;
 
 namespace Volo.Abp.ObjectExtending.Modularity
 {
@@ -67,14 +67,16 @@ namespace Volo.Abp.ObjectExtending.Modularity
                lookupTextPropertyName,
                () => new ExtensionPropertyConfiguration(this, typeof(string), lookupTextPropertyName)
            );
-            
+
             lookupTextPropertyInfo.DisplayName = propertyInfo.DisplayName;
         }
 
         [NotNull]
         public virtual ImmutableList<ExtensionPropertyConfiguration> GetProperties()
         {
-            return Properties.Values.ToImmutableList();
+            return Properties.OrderBy(t => t.Key)
+                            .Select(t => t.Value)
+                            .ToImmutableList();
         }
 
         private static void NormalizeProperty(ExtensionPropertyConfiguration propertyInfo)
