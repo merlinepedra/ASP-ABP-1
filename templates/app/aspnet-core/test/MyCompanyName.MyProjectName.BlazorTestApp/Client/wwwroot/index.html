@@ -2,14 +2,18 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>MyCompanyName.MyProjectName test app</title>
+    <title>MyCompanyName.MyProjectName.BlazorTestApp</title>
     <base href="/" />
 
-    <link href="_content/Blazorise/blazorise.css" rel="stylesheet" />
-    <link href="_content/Blazorise.Bootstrap/blazorise.bootstrap.css" rel="stylesheet" />
+    <link href="global.css" rel="stylesheet" />
 </head>
 <body>
-    <root>Loading...</root>
+    <div id="ApplicationContainer">
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
 
     <!-- Explicit display:none required so StartupErrorNotificationTest can observe it change -->
     <div id="blazor-error-ui" style="display: none;">
@@ -18,8 +22,7 @@
         <a class='dismiss' style="cursor: pointer;">🗙</a>
     </div>
 
-    <script src="_content/Blazorise/blazorise.js"></script>
-    <script src="_content/Blazorise.Bootstrap/blazorise.bootstrap.js"></script>
+    <script src="global.js"></script>
 
     <!-- Used for specific test cases -->
     <script src="js/jsinteroptests.js"></script>
@@ -41,7 +44,6 @@
             return location.href;
         }
     </script>
-    <script src="_framework/blazor.webassembly.js"></script>
 
     <script src="_content/Microsoft.AspNetCore.Components.Web.Extensions/headManager.js"></script>
 </body>

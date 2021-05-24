@@ -63,7 +63,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.BlazorE2ETests", "test\MyCompanyName.MyProjectName.BlazorE2ETests\MyCompanyName.MyProjectName.BlazorE2ETests.csproj", "{D8FB64BB-5A90-4841-8B5C-9F083327B6FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCompanyName.MyProjectName.BlazorUnitTests", "test\MyCompanyName.MyProjectName.BlazorUnitTests\MyCompanyName.MyProjectName.BlazorUnitTests.csproj", "{0855484B-EC96-46BD-B1B4-5442E6A41EF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.BlazorUnitTests", "test\MyCompanyName.MyProjectName.BlazorUnitTests\MyCompanyName.MyProjectName.BlazorUnitTests.csproj", "{0855484B-EC96-46BD-B1B4-5442E6A41EF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

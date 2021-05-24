@@ -15,6 +15,19 @@ namespace MyCompanyName.MyProjectName.BlazorTestApp.Client
     {
         public static async Task Main( string[] args )
         {
+            //var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+            //var application = builder.AddApplication<BlazorTestAppModule>(options =>
+            //{
+            //    options.UseAutofac();
+            //});
+
+            //var host = builder.Build();
+
+            //await application.InitializeAsync(host.Services);
+
+            //await host.RunAsync();
+
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
             builder.Services
@@ -30,7 +43,7 @@ namespace MyCompanyName.MyProjectName.BlazorTestApp.Client
                 BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
             });
 
-            builder.RootComponents.Add<Index>("root");
+            builder.RootComponents.Add<Index>("#ApplicationContainer");
 
             var host = builder.Build();
 

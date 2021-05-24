@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore.Components.RenderTree
+﻿@page "/"
+@inherits BlazorTestAppComponentBase
+@using Microsoft.AspNetCore.Components.RenderTree
 <div id="test-selector">
     Select test:
     <select @bind=@SelectedComponentTypeName>
