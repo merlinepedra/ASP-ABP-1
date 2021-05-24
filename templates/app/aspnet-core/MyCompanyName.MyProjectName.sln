@@ -53,9 +53,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.Blazor", "src\MyCompanyName.MyProjectName.Blazor\MyCompanyName.MyProjectName.Blazor.csproj", "{27B2DDC7-8B75-4322-A312-25419C15D9D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCompanyName.MyProjectName.Blazor.Server", "src\MyCompanyName.MyProjectName.Blazor.Server\MyCompanyName.MyProjectName.Blazor.Server.csproj", "{16F0BF4E-7D73-4278-8D9A-7CDE37105C6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.Blazor.Server", "src\MyCompanyName.MyProjectName.Blazor.Server\MyCompanyName.MyProjectName.Blazor.Server.csproj", "{16F0BF4E-7D73-4278-8D9A-7CDE37105C6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCompanyName.MyProjectName.Blazor.Server.Tiered", "src\MyCompanyName.MyProjectName.Blazor.Server.Tiered\MyCompanyName.MyProjectName.Blazor.Server.Tiered.csproj", "{C9F40C93-3DD0-4D6E-B98E-45A6F50FACDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.Blazor.Server.Tiered", "src\MyCompanyName.MyProjectName.Blazor.Server.Tiered\MyCompanyName.MyProjectName.Blazor.Server.Tiered.csproj", "{C9F40C93-3DD0-4D6E-B98E-45A6F50FACDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.BlazorTestApp.Server", "test\MyCompanyName.MyProjectName.BlazorTestApp\Server\MyCompanyName.MyProjectName.BlazorTestApp.Server.csproj", "{C1008653-F267-499A-A311-15DF11C8E8CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.BlazorTestApp.Client", "test\MyCompanyName.MyProjectName.BlazorTestApp\Client\MyCompanyName.MyProjectName.BlazorTestApp.Client.csproj", "{6A6C094C-3F9C-4D08-97BC-D449928D5014}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCompanyName.MyProjectName.BlazorE2ETests", "test\MyCompanyName.MyProjectName.BlazorE2ETests\MyCompanyName.MyProjectName.BlazorE2ETests.csproj", "{D8FB64BB-5A90-4841-8B5C-9F083327B6FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCompanyName.MyProjectName.BlazorUnitTests", "test\MyCompanyName.MyProjectName.BlazorUnitTests\MyCompanyName.MyProjectName.BlazorUnitTests.csproj", "{0855484B-EC96-46BD-B1B4-5442E6A41EF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -163,6 +171,22 @@ Global
 		{C9F40C93-3DD0-4D6E-B98E-45A6F50FACDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9F40C93-3DD0-4D6E-B98E-45A6F50FACDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9F40C93-3DD0-4D6E-B98E-45A6F50FACDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1008653-F267-499A-A311-15DF11C8E8CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1008653-F267-499A-A311-15DF11C8E8CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1008653-F267-499A-A311-15DF11C8E8CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1008653-F267-499A-A311-15DF11C8E8CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A6C094C-3F9C-4D08-97BC-D449928D5014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A6C094C-3F9C-4D08-97BC-D449928D5014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A6C094C-3F9C-4D08-97BC-D449928D5014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A6C094C-3F9C-4D08-97BC-D449928D5014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8FB64BB-5A90-4841-8B5C-9F083327B6FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8FB64BB-5A90-4841-8B5C-9F083327B6FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8FB64BB-5A90-4841-8B5C-9F083327B6FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8FB64BB-5A90-4841-8B5C-9F083327B6FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0855484B-EC96-46BD-B1B4-5442E6A41EF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0855484B-EC96-46BD-B1B4-5442E6A41EF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0855484B-EC96-46BD-B1B4-5442E6A41EF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0855484B-EC96-46BD-B1B4-5442E6A41EF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -193,6 +217,10 @@ Global
 		{27B2DDC7-8B75-4322-A312-25419C15D9D8} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{16F0BF4E-7D73-4278-8D9A-7CDE37105C6B} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{C9F40C93-3DD0-4D6E-B98E-45A6F50FACDA} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{C1008653-F267-499A-A311-15DF11C8E8CE} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{6A6C094C-3F9C-4D08-97BC-D449928D5014} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{D8FB64BB-5A90-4841-8B5C-9F083327B6FF} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{0855484B-EC96-46BD-B1B4-5442E6A41EF7} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
