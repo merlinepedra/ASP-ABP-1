@@ -1,1 +1,5 @@
-﻿<UiMessageAlert />
+﻿@inject BlazoriseUiMessageService UiMessageService
+
+<Button ElementId="btn_show_modal" Clicked="@(()=>UiMessageService.Info("test"))">SHOW MODAL</Button>
+
+<UiMessageAlert />
