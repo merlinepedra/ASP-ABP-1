@@ -9,9 +9,9 @@ using Moq;
 
 namespace MyCompanyName.MyProjectName.BlazorUnitTests.Helpers
 {
-    public static class BlazoriseConfig
+    public static class AbpTestConfig
     {
-        public static void AddBootstrapProviders(TestServiceProvider services)
+        public static void Setup(TestServiceProvider services)
         {
             services.AddSingleton<IIdGenerator>(new IdGenerator());
             services.AddSingleton<IEditContextValidator>(new EditContextValidator(new ValidationMessageLocalizerAttributeFinder()));

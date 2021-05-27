@@ -9,7 +9,7 @@ namespace MyCompanyName.MyProjectName.BlazorUnitTests.Components
     {
         public ButtonComponentTest()
         {
-            BlazoriseConfig.AddBootstrapProviders(Services);
+            AbpTestConfig.Setup(Services);
         }
 
         [Fact]
