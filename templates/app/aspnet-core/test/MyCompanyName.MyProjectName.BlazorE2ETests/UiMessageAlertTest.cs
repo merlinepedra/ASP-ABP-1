@@ -34,7 +34,7 @@ namespace MyCompanyName.MyProjectName.BlazorE2ETests
 
             button.Click();
 
-            var modal = Browser.FindElement(By.ClassName("modal fade show"));
+            var modal = Browser.FindElement(By.CssSelector(".modal.fade.show"));
 
             WaitAssert.NotNull(() => modal);
         }
