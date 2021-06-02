@@ -18,10 +18,12 @@ namespace MyCompanyName.MyProjectName.EntityFrameworkCore.Samples
     public class SampleRepositoryTests : MyProjectNameEntityFrameworkCoreTestBase
     {
         private readonly IRepository<AppUser, Guid> _appUserRepository;
+        private readonly IRepository<MyEntity, Guid> _myEntityRepository;
 
         public SampleRepositoryTests()
         {
             _appUserRepository = GetRequiredService<IRepository<AppUser, Guid>>();
+            _myEntityRepository = GetRequiredService<IRepository<MyEntity, Guid>>();
         }
 
         [Fact]
@@ -39,6 +41,23 @@ namespace MyCompanyName.MyProjectName.EntityFrameworkCore.Samples
 
                 //Assert
                 adminUser.ShouldNotBeNull();
+            });
+
+            await _myEntityRepository.InsertAsync(new MyEntity(Guid.NewGuid())
+            {
+                Price = 200.99M
+            });
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                //Act
+                var entity = await (await _myEntityRepository.GetQueryableAsync()).OrderBy(x => x.Price)
+                    .FirstOrDefaultAsync();
+
+                //Assert
+                entity.ShouldNotBeNull();
+
+                entity.Price.ShouldBe(200.99m);
             });
         }
     }

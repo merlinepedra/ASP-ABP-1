@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyCompanyName.MyProjectName.Users;
-using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.Identity;
@@ -8,31 +7,18 @@ using Volo.Abp.Users.EntityFrameworkCore;
 
 namespace MyCompanyName.MyProjectName.EntityFrameworkCore
 {
-    /* This is your actual DbContext used on runtime.
-     * It includes only your entities.
-     * It does not include entities of the used modules, because each module has already
-     * its own DbContext class. If you want to share some database tables with the used modules,
-     * just create a structure like done for AppUser.
-     *
-     * Don't use this DbContext for database migrations since it does not contain tables of the
-     * used modules (as explained above). See MyProjectNameMigrationsDbContext for migrations.
-     */
-    [ConnectionStringName("Default")]
-    public class MyProjectNameDbContext : AbpDbContext<MyProjectNameDbContext>, IMyProjectNameDbContext
+    public class MyProjectNameDbContextInUnitTest : AbpDbContext<MyProjectNameDbContextInUnitTest>, IMyProjectNameDbContext
     {
         public DbSet<AppUser> Users { get; set; }
 
         public DbSet<MyEntity> MyEntities { get; set; }
 
-        /* Add DbSet properties for your Aggregate Roots / Entities here.
-         * Also map them inside MyProjectNameDbContextModelCreatingExtensions.ConfigureMyProjectName
-         */
-
-        public MyProjectNameDbContext(DbContextOptions<MyProjectNameDbContext> options)
+        public MyProjectNameDbContextInUnitTest(DbContextOptions<MyProjectNameDbContextInUnitTest> options)
             : base(options)
         {
 
         }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -55,6 +41,10 @@ namespace MyCompanyName.MyProjectName.EntityFrameworkCore
             /* Configure your own tables/entities inside the ConfigureMyProjectName method */
 
             builder.ConfigureMyProjectName();
+
+            builder.Entity<MyEntity>()
+                .Property(e => e.Price)
+                .HasConversion<double>();
         }
     }
 }

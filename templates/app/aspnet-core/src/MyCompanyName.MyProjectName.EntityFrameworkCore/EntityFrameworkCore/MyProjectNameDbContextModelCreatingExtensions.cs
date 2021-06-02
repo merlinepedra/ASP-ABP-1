@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyCompanyName.MyProjectName.Users;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace MyCompanyName.MyProjectName.EntityFrameworkCore
 {
@@ -17,6 +19,12 @@ namespace MyCompanyName.MyProjectName.EntityFrameworkCore
             //    b.ConfigureByConvention(); //auto configure for the base class props
             //    //...
             //});
+
+            builder.Entity<MyEntity>(b =>
+            {
+                b.ToTable(MyProjectNameConsts.DbTablePrefix + "MyEntities", MyProjectNameConsts.DbSchema);
+                b.ConfigureByConvention(); //auto configure for the base class props
+            });
         }
     }
 }

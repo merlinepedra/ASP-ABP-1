@@ -22,6 +22,12 @@ namespace MyCompanyName.MyProjectName.EntityFrameworkCore
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             ConfigureInMemorySqlite(context.Services);
+
+            context.Services.AddAbpDbContext<MyProjectNameDbContextInUnitTest>(options =>
+            {
+                options.AddDefaultRepositories(includeAllEntities: true);
+                options.ReplaceDbContext<IMyProjectNameDbContext>();
+            });
         }
 
         private void ConfigureInMemorySqlite(IServiceCollection services)
