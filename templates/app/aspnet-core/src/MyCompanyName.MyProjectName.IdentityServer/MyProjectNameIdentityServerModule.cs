@@ -132,13 +132,9 @@ namespace MyCompanyName.MyProjectName
                 options.KeyPrefix = "MyProjectName:";
             });
 
-            if (!hostingEnvironment.IsDevelopment())
-            {
-                var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
-                context.Services
-                    .AddDataProtection()
-                    .PersistKeysToStackExchangeRedis(redis, "MyProjectName-Protection-Keys");
-            }
+            context.Services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\mykeys"))
+                .SetApplicationName("MyProjectName");
 
             context.Services.AddCors(options =>
             {

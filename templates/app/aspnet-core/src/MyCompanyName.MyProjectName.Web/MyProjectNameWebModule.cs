@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +76,10 @@ namespace MyCompanyName.MyProjectName.Web
         {
             var hostingEnvironment = context.Services.GetHostingEnvironment();
             var configuration = context.Services.GetConfiguration();
+
+            context.Services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\mykeys"))
+                .SetApplicationName("MyProjectName");
 
             ConfigureUrls(configuration);
             ConfigureBundles();
