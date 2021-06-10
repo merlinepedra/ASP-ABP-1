@@ -1,7 +1,9 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Logging;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Identity;
@@ -40,6 +42,17 @@ namespace Volo.Abp.Account.Web.Pages.Account
                     ClientName = logoutContext?.ClientName,
                     SignOutIframeUrl = logoutContext?.SignOutIFrameUrl
                 };
+
+                var queryCulture = logoutContext?.Parameters.Get("culture");
+                var queryUICulture = logoutContext?.Parameters.Get("ui-culture");
+                if (!queryCulture.IsNullOrWhiteSpace())
+                {
+                    vm.Culture = queryCulture;
+                }
+                if (!queryUICulture.IsNullOrWhiteSpace())
+                {
+                    vm.UICulture = queryUICulture;
+                }
 
                 Logger.LogInformation($"Redirecting to LoggedOut Page...");
 

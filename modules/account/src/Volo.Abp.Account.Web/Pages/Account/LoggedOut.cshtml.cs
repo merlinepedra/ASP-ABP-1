@@ -17,6 +17,14 @@ namespace Volo.Abp.Account.Web.Pages.Account
         [BindProperty(SupportsGet = true)]
         public string PostLogoutRedirectUri { get; set; }
 
+        [HiddenInput]
+        [BindProperty(SupportsGet = true)]
+        public string Culture { get; set; }
+
+        [HiddenInput]
+        [BindProperty(SupportsGet = true)]
+        public string UICulture { get; set; }
+
         public virtual Task<IActionResult> OnGetAsync()
         {
             return Task.FromResult<IActionResult>(Page());
