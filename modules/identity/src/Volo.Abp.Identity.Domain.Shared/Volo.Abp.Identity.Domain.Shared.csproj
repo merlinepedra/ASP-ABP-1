@@ -18,6 +18,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Volo\Abp\Identity\Localization\*.json" />
     <Content Remove="Volo\Abp\Identity\Localization\*.json" />
+    <None Remove="Volo.Abp.Identity.Domain.Shared.abppkg.json" />
+    <Content Include="Volo.Abp.Identity.Domain.Shared.abppkg.json">
+      <Pack>true</Pack>
+      <PackagePath>content\</PackagePath>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

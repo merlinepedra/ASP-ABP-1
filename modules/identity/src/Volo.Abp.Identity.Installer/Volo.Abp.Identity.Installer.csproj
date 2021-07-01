@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Volo.Abp.Identity.abpmdl.json" />
+      <Content Include="Volo.Abp.Identity.abpmdl.json">
+          <Pack>true</Pack>
+          <PackagePath>content\</PackagePath>
+      </Content>
+    </ItemGroup>
+
+</Project>

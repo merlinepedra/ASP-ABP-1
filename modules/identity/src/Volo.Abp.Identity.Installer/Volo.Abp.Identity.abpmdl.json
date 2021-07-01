@@ -1,0 +1,58 @@
+{
+  "packages": {
+    "Volo.Abp.Identity.Domain.Shared": {
+      "name": "Volo.Abp.Identity.Domain.Shared",
+      "role": "lib.domain-shared"
+    },
+    "Volo.Abp.Identity.Domain": {
+      "name": "Volo.Abp.Identity.Domain",
+      "role": "lib.domain"
+    },
+    "Volo.Abp.Identity.Application.Contracts": {
+      "name": "Volo.Abp.Identity.Application.Contracts",
+      "role": "lib.application-contracts"
+    },
+    "Volo.Abp.Identity.Application": {
+      "name": "Volo.Abp.Identity.Application",
+      "role": "lib.application"
+    },
+    "Volo.Abp.Identity.EntityFrameworkCore": {
+      "name": "Volo.Abp.Identity.EntityFrameworkCore",
+      "role": "lib.ef"
+    },
+    "Volo.Abp.Identity.HttpApi": {
+      "name": "Volo.Abp.Identity.HttpApi",
+      "role": "lib.http-api"
+    },
+    "Volo.Abp.Identity.HttpApi.Client": {
+      "name": "Volo.Abp.Identity.HttpApi.Client",
+      "role": "lib.http-api-client"
+    },
+    "Volo.Abp.Identity.Web": {
+      "name": "Volo.Abp.Identity.Web",
+      "role": "lib.mvc"
+    },
+    "Volo.Abp.Identity.MongoDB": {
+      "name": "Volo.Abp.Identity.MongoDB",
+      "role": "lib.mongodb"
+    },
+    "Volo.Abp.Identity.AspNetCore": {
+      "name": "Volo.Abp.Identity.AspNetCore"
+    },
+    "Volo.Abp.PermissionManagement.Domain.Identity": {
+      "name": "Volo.Abp.PermissionManagement.Domain.Identity"
+    },
+    "Volo.Abp.Identity.Blazor": {
+      "name": "Volo.Abp.Identity.Blazor/Volo.Abp.Identity.Blazor.abppkg.json",
+      "role": "lib.blazor"
+    },
+    "Volo.Abp.Identity.Blazor.Server": {
+      "name": "Volo.Abp.Identity.Blazor.Server/Volo.Abp.Identity.Blazor.Server.abppkg.json",
+      "role": "lib.blazor-server"
+    },
+    "Volo.Abp.Identity.Blazor.WebAssembly": {
+      "name": "Volo.Abp.Identity.Blazor.WebAssembly/Volo.Abp.Identity.Blazor.WebAssembly.abppkg.json",
+      "role": "lib.blazor-wasm"
+    }
+  }
+}

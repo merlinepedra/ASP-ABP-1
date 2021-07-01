@@ -1,0 +1,16 @@
+{
+  "modules": {
+    "Volo.Abp.Identity": {
+      "displayName": "Identity",
+      "description": "Manage users & roles, based on Microsoft Identity library.",
+      "screenshots": [
+        {
+          "url": "https://commercial.abp.io/images/descriptions/identity-role-page-2.png"
+        },
+        {
+          "url": "https://commercial.abp.io/images/descriptions/identity-user-page-2.png"
+        }
+      ]
+    }
+  }
+}
