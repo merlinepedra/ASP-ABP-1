@@ -26,7 +26,7 @@ namespace Volo.Abp.Http.Client.ClientProxying
             JsonSerializer = jsonSerializer;
             ActionApiDescriptionModels = new Dictionary<string, ActionApiDescriptionModel>();
 
-            Initial();
+            Initialize();
         }
 
         public Task<ActionApiDescriptionModel> FindActionAsync(string methodName)
@@ -39,7 +39,7 @@ namespace Volo.Abp.Http.Client.ClientProxying
             return Task.FromResult(ApplicationApiDescriptionModel);
         }
 
-        private void Initial()
+        private void Initialize()
         {
             ApplicationApiDescriptionModel = GetApplicationApiDescriptionModel();
             var controllers = ApplicationApiDescriptionModel.Modules.Select(x=>x.Value).SelectMany(x => x.Controllers.Values).ToList();

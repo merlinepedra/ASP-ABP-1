@@ -19,4 +19,9 @@
     <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.Http.Client\Volo.Abp.Http.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="ClientProxies\identity-generate-proxy.json" />
+    <EmbeddedResource Include="ClientProxies\identity-generate-proxy.json" />
+  </ItemGroup>
+
 </Project>
