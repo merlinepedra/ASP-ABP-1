@@ -7,16 +7,12 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Volo.CmsKit.Menus
 {
-    public class MenuItem : AuditedEntity<Guid>
+    public class MenuItem : AuditedAggregateRoot<Guid>, IMultiTenant
     {
-        /// <summary>
-        /// Parent <see cref="Menu"/> Id.
-        /// </summary>
-        public Guid MenuId { get; set; }
-
         /// <summary>
         /// Presents another <see cref="MenuItem"/> Id.
         /// If it's <see langword="null"/>, then it's a root menu item.
@@ -27,7 +23,7 @@ namespace Volo.CmsKit.Menus
         public string DisplayName { get; protected set; }
 
         public bool IsActive { get; set; }
-        
+
         [NotNull]
         public string Url { get; protected set; }
 
@@ -43,9 +39,9 @@ namespace Volo.CmsKit.Menus
 
         public Guid? PageId { get; protected set; }
 
+        public Guid? TenantId { get; protected set; }
 
         public MenuItem(Guid id,
-                        Guid menuId,
                         [NotNull] string displayName,
                         [NotNull] string url,
                         bool isActive = true,
@@ -54,10 +50,10 @@ namespace Volo.CmsKit.Menus
                         int order = 0,
                         [CanBeNull] string target = null,
                         [CanBeNull] string elementId = null,
-                        [CanBeNull] string cssClass = null) 
-            :base(id)
+                        [CanBeNull] string cssClass = null,
+                        [CanBeNull] Guid? tenantId = null)
+            : base(id)
         {
-            MenuId = menuId;
             SetDisplayName(displayName);
             IsActive = isActive;
             ParentId = parentId;
@@ -67,6 +63,7 @@ namespace Volo.CmsKit.Menus
             Target = target;
             ElementId = elementId;
             CssClass = cssClass;
+            TenantId = tenantId;
         }
 
         public void SetDisplayName([NotNull] string displayName)
@@ -74,7 +71,7 @@ namespace Volo.CmsKit.Menus
             DisplayName = Check.NotNullOrEmpty(displayName, nameof(displayName), MenuItemConsts.MaxDisplayNameLength);
         }
 
-        public void SetUrl([NotNull]string url)
+        public void SetUrl([NotNull] string url)
         {
             Url = Check.NotNullOrEmpty(url, nameof(url), MenuItemConsts.MaxUrlLength);
         }

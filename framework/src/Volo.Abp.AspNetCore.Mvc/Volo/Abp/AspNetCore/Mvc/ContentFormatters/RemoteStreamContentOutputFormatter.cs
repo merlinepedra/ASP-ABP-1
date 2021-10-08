@@ -26,14 +26,16 @@ namespace Volo.Abp.AspNetCore.Mvc.ContentFormatters
             {
                 context.HttpContext.Response.ContentType = remoteStream.ContentType;
 
-                using (var stream = remoteStream.GetStream())
+                if (!remoteStream.FileName.IsNullOrWhiteSpace())
                 {
-                    if (stream.CanSeek)
-                    {
-                        stream.Position = 0;
-                    }
+                    var contentDisposition = new ContentDispositionHeaderValue("attachment");
+                    contentDisposition.SetHttpFileName(remoteStream.FileName);
+                    context.HttpContext.Response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
+                }
 
-                    await stream.CopyToAsync(context.HttpContext.Response.Body);
+                using (remoteStream)
+                {
+                    await remoteStream.GetStream().CopyToAsync(context.HttpContext.Response.Body);
                 }
             }
         }

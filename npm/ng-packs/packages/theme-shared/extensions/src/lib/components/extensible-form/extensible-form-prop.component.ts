@@ -1,13 +1,16 @@
 import { ABP, AbpValidators, ConfigStateService, TrackByService } from '@abp/ng.core';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   Optional,
   SimpleChanges,
   SkipSelf,
+  ViewChild,
 } from '@angular/core';
 import {
   ControlContainer,
@@ -19,7 +22,6 @@ import {
 import { NgbDateAdapter, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import snq from 'snq';
 import { DateAdapter } from '../../adapters/date.adapter';
 import { TimeAdapter } from '../../adapters/time.adapter';
 import { EXTRA_PROPERTIES_KEY } from '../../constants/extra-properties';
@@ -43,10 +45,14 @@ import { addTypeaheadTextSuffix } from '../../utils/typeahead.util';
     { provide: NgbTimeAdapter, useClass: TimeAdapter },
   ],
 })
-export class ExtensibleFormPropComponent implements OnChanges {
+export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   @Input() data: PropData;
 
   @Input() prop: FormProp;
+
+  @Input() first: boolean;
+
+  @ViewChild('field') private fieldRef: ElementRef<HTMLElement>;
 
   asterisk = '';
 
@@ -116,6 +122,12 @@ export class ExtensibleFormPropComponent implements OnChanges {
     this.asterisk = this.validators.some(isRequired) ? '*' : '';
   }
 
+  ngAfterViewInit() {
+    if (this.first && this.fieldRef) {
+      this.fieldRef.nativeElement.focus();
+    }
+  }
+
   getComponent(prop: FormProp): string {
     switch (prop.type) {
       case ePropType.Boolean:
@@ -158,7 +170,7 @@ export class ExtensibleFormPropComponent implements OnChanges {
   }
 
   ngOnChanges({ prop }: SimpleChanges) {
-    const currentProp = snq<FormProp>(() => prop.currentValue);
+    const currentProp = prop?.currentValue;
     const { options, readonly, disabled, validators } = currentProp || {};
 
     if (options) this.options$ = options(this.data);

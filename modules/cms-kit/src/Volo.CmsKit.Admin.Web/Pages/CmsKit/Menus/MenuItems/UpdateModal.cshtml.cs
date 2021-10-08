@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Volo.Abp.Domain.Entities;
 using Volo.CmsKit.Admin.Menus;
 using Volo.CmsKit.Menus;
 
@@ -11,27 +12,23 @@ namespace Volo.CmsKit.Admin.Web.Pages.CmsKit.Menus.MenuItems
 {
     public class UpdateModalModel : CmsKitAdminPageModel
     {
-        protected IMenuAdminAppService MenuAdminAppService { get; }
+        protected IMenuItemAdminAppService MenuAdminAppService { get; }
 
         [BindProperty]
         public MenuItemUpdateViewModel ViewModel { get; set; }
 
         [HiddenInput]
         [BindProperty(SupportsGet = true)]
-        public Guid MenuId { get; set; }
-
-        [HiddenInput]
-        [BindProperty(SupportsGet = true)]
         public Guid Id { get; set; }
      
-        public UpdateModalModel(IMenuAdminAppService menuAdminAppService)
+        public UpdateModalModel(IMenuItemAdminAppService menuAdminAppService)
         {
             MenuAdminAppService = menuAdminAppService;
         }
 
         public async Task OnGetAsync()
         {
-            var menuItemDto = await MenuAdminAppService.GetMenuItemAsync(MenuId, Id);
+            var menuItemDto = await MenuAdminAppService.GetAsync(Id);
 
             ViewModel = ObjectMapper.Map<MenuItemDto, MenuItemUpdateViewModel>(menuItemDto);
         }
@@ -40,14 +37,14 @@ namespace Volo.CmsKit.Admin.Web.Pages.CmsKit.Menus.MenuItems
         {
             var input = ObjectMapper.Map<MenuItemUpdateViewModel, MenuItemUpdateInput>(ViewModel);
             
-            var result = await MenuAdminAppService.UpdateMenuItemAsync(MenuId, Id, input);
+            var result = await MenuAdminAppService.UpdateAsync(Id, input);
 
             return new OkObjectResult(result);
         }
         
         [AutoMap(typeof(MenuItemDto))]
         [AutoMap(typeof(MenuItemUpdateInput), ReverseMap = true)]
-        public class MenuItemUpdateViewModel
+        public class MenuItemUpdateViewModel : IHasConcurrencyStamp
         {
             [Required]
             public string DisplayName { get; set; }
@@ -65,6 +62,9 @@ namespace Volo.CmsKit.Admin.Web.Pages.CmsKit.Menus.MenuItems
             public string CssClass { get; set; }
 
             public Guid? PageId { get; set; }
+
+            [HiddenInput]
+            public string ConcurrencyStamp { get; set; }
         }
     }
 }

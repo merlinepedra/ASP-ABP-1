@@ -1,4 +1,4 @@
-﻿# ABP CLI
+# ABP CLI
 
 ABP CLI (Command Line Interface) is a command line tool to perform some common operations for ABP based solutions.
 
@@ -119,6 +119,8 @@ For more samples, go to [ABP CLI Create Solution Samples](CLI-New-Command-Sample
 * `--local-framework-ref --abp-path`: Uses local projects references to the ABP framework instead of using the NuGet packages. This can be useful if you download the ABP Framework source code and have a local reference to the framework from your application.
 * `--no-random-port`: Uses template's default ports.
 
+See some [examples for the new command](CLI-New-Command-Samples.md) here.
+
 ### update
 
 Updating all ABP related packages can be tedious since there are many packages of the framework and modules. This command automatically updates all ABP related NuGet and NPM packages in a solution or project to the latest versions.
@@ -159,7 +161,7 @@ abp add-package <package-name> [options]
 Example:
 
 ````
-abp add-package Volo.Abp.MongoDB
+abp add-package Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic
 ````
 
 * This example adds the Volo.Abp.MongoDB package to the project.
@@ -168,7 +170,14 @@ abp add-package Volo.Abp.MongoDB
 
 * `--project` or `-p`: Specifies the project (.csproj) file path. If not specified, CLI tries to find a .csproj file in the current directory.
 * `--with-source-code`: Downloads the source code of the package to your solution folder and uses local project references instead of NuGet/NPM packages.
-* `--add-to-solution-file`: Adds the downloaded package to your solution file, so you will also see the package when you open the solution on a IDE. (only available when `--with-source-code` is True.)
+* `--add-to-solution-file`: Adds the downloaded package to your solution file, so you will also see the package when you open the solution on a IDE. (only available when `--with-source-code` is True)
+
+> Currently only the source code of the basic theme packages([MVC](https://docs.abp.io/en/abp/latest/UI/AspNetCore/Basic-Theme) and [Blazor](https://docs.abp.io/en/abp/latest/UI/Blazor/Basic-Theme)) can be downloaded.
+> - Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic
+> - Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme
+> - Volo.Abp.AspNetCore.Components.Web.BasicTheme
+> - Volo.Abp.AspNetCore.Components.Server.BasicTheme
+
 
 ### add-module
 
@@ -449,3 +458,7 @@ abp install-libs [options]
 #### Options
 
 * ```--working-directory``` or ```-wd```: Specifies the working directory. This option is useful when executing directory doesn't contain a project file.
+
+## See Also
+
+* [Examples for the new command](CLI-New-Command-Samples.md)

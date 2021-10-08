@@ -1,31 +1,18 @@
-﻿# ABP Framework Road Map
+# ABP Framework Road Map
 
 This document provides a road map, release schedule and planned features for the ABP Framework.
 
 ## Next Versions
 
-### v4.4
-
-This version will focus on **documentation** and **improvements** of current features. In addition, the following features are planned:
-
-* Revisit the microservice demo solution ([#8385](https://github.com/abpframework/abp/issues/8385))
-* A new UI Theme alternative to the Basic Theme ([#6132](https://github.com/abpframework/abp/issues/6132))
-* Improvements and new features to the [CMS Kit](Modules/Cms-Kit.md) module ([#8380](https://github.com/abpframework/abp/issues/8380) [#8381](https://github.com/abpframework/abp/issues/8381))
-* Razor engine support for text templating ([#8373](https://github.com/abpframework/abp/issues/8373))
-
-**Planned release date**: End of Quarter 2, 2021. See the [4.4 milestone](https://github.com/abpframework/abp/milestone/52) to track the progress.
-
 ### v5.0
 
-We planned to focus on the ABP Framework v5.0 after the 4.4 release. This version will focus on the following works:
+This version will focus on the following works:
 
 * Upgrading to .NET 6.0 ([#9004](https://github.com/abpframework/abp/issues/9004))
 * Upgrading to Bootstrap 5.x ([#8922](https://github.com/abpframework/abp/issues/8922))
-* Alternative to IdentityServer4 ([#7221](https://github.com/abpframework/abp/issues/7221))
-* Dapr integration ([#2183](https://github.com/abpframework/abp/issues/2183))
+* C# and JavaScript Static Client Proxy Generation ([#9864](https://github.com/abpframework/abp/issues/9864))
+* Revisit the microservice demo solution ([#8385](https://github.com/abpframework/abp/issues/8385))
 * Publishing distributed events as transactional ([#6126](https://github.com/abpframework/abp/issues/6126))
-* Resource based authorization system ([#236](https://github.com/abpframework/abp/issues/236))
-* API Versioning system: finalize & document ([#497](https://github.com/abpframework/abp/issues/497))
 * Performance optimizations; Enabling .NET Trimming, using source generators and reducing reflection, etc.
 * Improving the abp.io platform and work more on contents and documents
 
@@ -37,6 +24,10 @@ The *Next Versions* section above shows the main focus of the planned versions. 
 
 Here, a list of major items in the backlog we are considering to work on in the next versions.
 
+* ([#497](https://github.com/abpframework/abp/issues/497)) API Versioning system: finalize & document
+* ([#7221](https://github.com/abpframework/abp/issues/7221)) Alternative to IdentityServer4
+* ([#2183](https://github.com/abpframework/abp/issues/2183)) Dapr integration
+* ([#236](https://github.com/abpframework/abp/issues/236)) Resource based authorization system
 * [#2882](https://github.com/abpframework/abp/issues/2882) / Providing a gRPC integration infrastructure (while it is [already possible](https://github.com/abpframework/abp-samples/tree/master/GrpcDemo) to create or consume gRPC endpoints for your application, we plan to create endpoints for the [standard application modules](https://docs.abp.io/en/abp/latest/Modules/Index))
 * [#1754](https://github.com/abpframework/abp/issues/1754) / Multi-lingual entities
 * [#57](https://github.com/abpframework/abp/issues/57) / Built-in CQRS infrastructure
