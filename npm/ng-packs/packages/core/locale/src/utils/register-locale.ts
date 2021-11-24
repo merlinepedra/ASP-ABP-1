@@ -30,7 +30,7 @@ export function registerLocale(
         /* webpackChunkName: "locales"*/
         /* webpackInclude: /[/\\](ar|cs|en|en-GB|es|de|fi|fr|hi|hu|is|it|pt|tr|ru|ro|sk|sl|zh-Hans|zh-Hant).js/ */
         /* webpackExclude: /[/\\]global|extra/ */
-        `@angular/common/locales/${localeMap[locale] || locale}.js`
+        `@angular/common/locales/${localeMap[locale] || locale}`
       )
         .then(resolve)
         .catch(error => {
