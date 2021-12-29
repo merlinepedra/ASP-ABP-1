@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
@@ -10,16 +11,19 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MyCompanyName.MyProjectName.EntityFrameworkCore;
 using MyCompanyName.MyProjectName.MultiTenancy;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using Volo.Abp;
+using Volo.Abp.AspNetCore.Authentication.OpenIdConnect;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
+using Volo.Abp.Hangfire;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Localization;
@@ -37,6 +41,8 @@ namespace MyCompanyName.MyProjectName;
     typeof(MyProjectNameApplicationModule),
     typeof(MyProjectNameEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpAspNetCoreAuthenticationOpenIdConnectModule),
+    typeof(AbpHangfireModule),
     typeof(AbpSwashbuckleModule)
 )]
 public class MyProjectNameHttpApiHostModule : AbpModule
@@ -45,6 +51,11 @@ public class MyProjectNameHttpApiHostModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
+
+        context.Services.AddHangfire(config =>
+        {
+            config.UseSqlServerStorage(configuration["ConnectionStrings:Default"]);
+        });
 
         ConfigureConventionalControllers();
         ConfigureAuthentication(context, configuration);
@@ -101,6 +112,31 @@ public class MyProjectNameHttpApiHostModule : AbpModule
                 options.Authority = configuration["AuthServer:Authority"];
                 options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
                 options.Audience = "MyProjectName";
+            });
+
+        context.Services.AddAuthentication()
+            .AddCookie("HangfireCookies", options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(365);
+            })
+            .AddAbpOpenIdConnect("oidc", options =>
+            {
+                options.Authority = configuration["AuthServer:Authority"];
+                options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+
+                options.SignInScheme = "HangfireCookies";
+
+                options.ClientId = configuration["AuthServer:SwaggerClientId"] + "_API";
+                options.ClientSecret = configuration["AuthServer:SwaggerClientSecret"];
+
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+
+                options.Scope.Add("role");
+                options.Scope.Add("email");
+                options.Scope.Add("phone");
+                options.Scope.Add("MyProjectName");
             });
     }
 
@@ -214,6 +250,11 @@ public class MyProjectNameHttpApiHostModule : AbpModule
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
             options.OAuthClientSecret(configuration["AuthServer:SwaggerClientSecret"]);
             options.OAuthScopes("MyProjectName");
+        });
+
+        app.UseHangfireDashboard("/hangfire", new DashboardOptions
+        {
+            AsyncAuthorization = new[] { new MyHangfireAuthorizationFilter() }
         });
 
         app.UseAuditing();

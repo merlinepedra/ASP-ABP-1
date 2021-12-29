@@ -244,6 +244,19 @@ public class IdentityServerDataSeedContributor : IDataSeedContributor, ITransien
                 redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
                 corsOrigins: new[] { swaggerRootUrl.RemovePostFix("/") }
             );
+
+            var newSwaggerClientId = swaggerClientId + "_API";
+            var client = await CreateClientAsync(
+                name: newSwaggerClientId,
+                scopes: commonScopes,
+                grantTypes: new[] { "hybrid" },
+                secret: configurationSection["MyProjectName_Swagger:ClientSecret"]?.Sha256(),
+                requireClientSecret: false,
+                redirectUri: $"{swaggerRootUrl}/signin-oidc",
+                postLogoutRedirectUri: $"{swaggerRootUrl}/signout-callback-oidc",
+                frontChannelLogoutUri: $"{swaggerRootUrl}/Account/FrontChannelLogout",
+                corsOrigins: new[] { swaggerRootUrl.RemovePostFix("/") }
+            );
         }
     }
 

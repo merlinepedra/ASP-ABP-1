@@ -1,6 +1,6 @@
 {
   "iisSettings": {
-    "windowsAuthentication": false, 
+    "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "https://localhost:44300",
@@ -18,7 +18,7 @@
     "MyCompanyName.MyProjectName.HttpApi.Host": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44300",
+      "applicationUrl": "https://localhost:44305",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
