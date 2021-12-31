@@ -1,0 +1,11 @@
+{
+  "name": "Volo.Abp.Account.HttpApi",
+  "hash": "3bf1078896c7f22f8cd4d83043ef1592",
+  "contents": [
+    {
+      "namespace": "Volo.Abp.Account",
+      "contentType": "abpModule",
+      "name": "AbpAccountHttpApiModule"
+    }
+  ]
+}

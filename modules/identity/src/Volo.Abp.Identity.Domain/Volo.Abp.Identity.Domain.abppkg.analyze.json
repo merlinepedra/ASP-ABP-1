@@ -1,6 +1,6 @@
 {
   "name": "Volo.Abp.Identity.Domain",
-  "hash": "7736ef4a79faf05ed7e6097700d560ce",
+  "hash": "c857165f2bef6a16b0ee7b1fa4c7ec63",
   "contents": [
     {
       "namespace": "Volo.Abp.Identity",
@@ -81,13 +81,13 @@
       "namespace": "Volo.Abp.Identity",
       "summary": null,
       "contentType": "domainService",
-      "name": "IdentityRoleManager"
+      "name": "IdentityLinkUserManager"
     },
     {
       "namespace": "Volo.Abp.Identity",
       "summary": null,
       "contentType": "domainService",
-      "name": "IdentityLinkUserManager"
+      "name": "IdentityRoleManager"
     },
     {
       "namespace": "Volo.Abp.Identity",
