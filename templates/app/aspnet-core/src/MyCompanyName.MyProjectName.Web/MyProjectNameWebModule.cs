@@ -1,10 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using MyCompanyName.MyProjectName.EntityFrameworkCore;
 using MyCompanyName.MyProjectName.Localization;
 using MyCompanyName.MyProjectName.MultiTenancy;
@@ -37,6 +43,7 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
+using IConfigurationProvider = Microsoft.Extensions.Configuration.IConfigurationProvider;
 
 namespace MyCompanyName.MyProjectName.Web;
 
@@ -58,6 +65,8 @@ public class MyProjectNameWebModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
+        context.Services.AddConventionalRegistrar(new AbpAutoMapperConventionalRegistrar());
+
         context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
         {
             options.AddAssemblyResource(
@@ -75,6 +84,46 @@ public class MyProjectNameWebModule : AbpModule
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
+
+
+        context.Services.RemoveAll(x => x.ImplementationType != null && x.ImplementationType.IsAssignableFrom(typeof(IMapperAccessor)));
+
+        var mapperAccessorType = typeof(IMapperAccessor).Assembly.GetType("Volo.Abp.AutoMapper.MapperAccessor", true, true);
+        context.Services.AddSingleton(mapperAccessorType, (serviceProvider =>
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var options = scope.ServiceProvider.GetRequiredService<IOptions<AbpAutoMapperOptions>>().Value;
+                void ConfigureAll(IAbpAutoMapperConfigurationContext ctx)
+                {
+                    foreach (var configurator in options.Configurators)
+                    {
+                        configurator(ctx);
+                    }
+                }
+                void ValidateAll(AutoMapper.IConfigurationProvider config)
+                {
+                    foreach (var profileType in options.ValidatingProfiles)
+                    {
+                        config.AssertConfigurationIsValid(((Profile) Activator.CreateInstance(profileType)).ProfileName);
+                    }
+                }
+
+                var mapperConfiguration = new MapperConfiguration(mapperConfigurationExpression =>
+                {
+                    ConfigureAll(new AbpAutoMapperConfigurationContext(mapperConfigurationExpression, scope.ServiceProvider));
+                });
+
+                ValidateAll(mapperConfiguration);
+
+
+                var mapperAccessor = Activator.CreateInstance(mapperAccessorType);
+                var mapper = mapperAccessor.GetType().GetProperty("Mapper", BindingFlags.Instance | BindingFlags.Public);
+                mapper.SetValue(mapperAccessor, new Mapper(mapperConfiguration, serviceProvider.GetService));
+                return mapperAccessor;
+            }
+        }));
+        context.Services.AddSingleton(provider => provider.GetRequiredService(mapperAccessorType).As<IMapperAccessor>());
 
         ConfigureUrls(configuration);
         ConfigureBundles();
