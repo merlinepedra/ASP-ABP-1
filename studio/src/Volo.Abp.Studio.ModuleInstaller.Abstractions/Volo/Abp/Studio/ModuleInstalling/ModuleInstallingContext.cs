@@ -26,6 +26,8 @@ public class ModuleInstallingContext
 
     public Dictionary<string, string> Options { get; }
 
+    public IServiceProvider StudioServiceProvider { get; }
+
     public IServiceProvider ServiceProvider { get; }
 
     public ModuleInstallingContext(
@@ -35,7 +37,8 @@ public class ModuleInstallingContext
         bool addToSolutionFile,
         string version,
         Dictionary<string, string> options,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        IServiceProvider studioServiceProvider)
     {
         ModuleName = moduleName;
         TargetModule = targetModule;
@@ -50,6 +53,7 @@ public class ModuleInstallingContext
         EfCoreConfigurationMethodDeclarations = new List<EfCoreConfigurationMethodDeclaration>();
 
         ServiceProvider = Check.NotNull(serviceProvider, nameof(serviceProvider));
+        StudioServiceProvider = Check.NotNull(studioServiceProvider, nameof(studioServiceProvider));
     }
 
     public void AddEfCoreConfigurationMethodDeclaration(params EfCoreConfigurationMethodDeclaration[] methodNames)

@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Volo.Abp.Studio.Analyzing.Abstractions\Volo.Abp.Studio.Analyzing.Abstractions.csproj" />
-        <ProjectReference Include="..\..\..\framework\src\Volo.Abp.Core\Volo.Abp.Core.csproj" />
+        <ProjectReference Include="..\..\..\framework\src\Volo.Abp.EventBus\Volo.Abp.EventBus.csproj" />
     </ItemGroup>
 
 </Project>
