@@ -46,7 +46,7 @@ public class ModuleInstallingPipeline
     {
         await LocalEventBus.PublishAsync(new ModuleInstallingStepActionEvent {
             ModuleInstallingStep = type,
-            Action = ModuleInstallingStepAction.started,
+            Action = action,
             TotalStepCount = totalStepCount,
             CurrentStepNumber = index
         }, false);
