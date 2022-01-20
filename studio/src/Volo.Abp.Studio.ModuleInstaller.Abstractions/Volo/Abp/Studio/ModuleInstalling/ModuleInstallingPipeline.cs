@@ -49,7 +49,7 @@ public class ModuleInstallingPipeline
             Action = ModuleInstallingStepAction.started,
             TotalStepCount = totalStepCount,
             CurrentStepNumber = index
-        });
+        }, false);
     }
 
     public void Add(ModuleInstallingPipelineStep step)
