@@ -1,16 +1,21 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Gdpr;
 
 namespace Volo.Abp.Identity;
 
 public class IdentityLinkUser : BasicAggregateRoot<Guid>
 {
+    [GdprData]
     public virtual Guid SourceUserId { get; protected set; }
 
+    [GdprData]
     public virtual Guid? SourceTenantId { get; protected set; }
 
+    [GdprData]
     public virtual Guid TargetUserId { get; protected set; }
 
+    [GdprData]
     public virtual Guid? TargetTenantId { get; protected set; }
 
     /// <summary>

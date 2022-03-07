@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Gdpr;
 using Volo.Abp.Guids;
 using Volo.Abp.Users;
 
@@ -19,34 +20,40 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser
     /// <summary>
     /// Gets or sets the user name for this user.
     /// </summary>
+    [GdprData]
     public virtual string UserName { get; protected internal set; }
 
     /// <summary>
     /// Gets or sets the normalized user name for this user.
     /// </summary>
+    [GdprData]
     [DisableAuditing]
     public virtual string NormalizedUserName { get; protected internal set; }
 
     /// <summary>
     /// Gets or sets the Name for the user.
     /// </summary>
+    [GdprData]
     [CanBeNull]
     public virtual string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the Surname for the user.
     /// </summary>
+    [GdprData]
     [CanBeNull]
     public virtual string Surname { get; set; }
 
     /// <summary>
     /// Gets or sets the email address for this user.
     /// </summary>
+    [GdprData]
     public virtual string Email { get; protected internal set; }
 
     /// <summary>
     /// Gets or sets the normalized email address for this user.
     /// </summary>
+    [GdprData]
     [DisableAuditing]
     public virtual string NormalizedEmail { get; protected internal set; }
 
@@ -73,6 +80,7 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser
     /// <summary>
     /// Gets or sets a telephone number for the user.
     /// </summary>
+    [GdprData]
     [CanBeNull]
     public virtual string PhoneNumber { get; protected internal set; }
 

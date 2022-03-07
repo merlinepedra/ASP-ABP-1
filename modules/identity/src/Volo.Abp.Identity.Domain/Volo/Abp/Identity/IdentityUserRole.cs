@@ -1,5 +1,6 @@
 using System;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Gdpr;
 using Volo.Abp.MultiTenancy;
 
 namespace Volo.Abp.Identity;
@@ -9,16 +10,19 @@ namespace Volo.Abp.Identity;
 /// </summary>
 public class IdentityUserRole : Entity, IMultiTenant
 {
+    [GdprData]
     public virtual Guid? TenantId { get; protected set; }
 
     /// <summary>
     /// Gets or sets the primary key of the user that is linked to a role.
     /// </summary>
+    [GdprData]
     public virtual Guid UserId { get; protected set; }
 
     /// <summary>
     /// Gets or sets the primary key of the role that is linked to the user.
     /// </summary>
+    [GdprData]
     public virtual Guid RoleId { get; protected set; }
 
     protected IdentityUserRole()

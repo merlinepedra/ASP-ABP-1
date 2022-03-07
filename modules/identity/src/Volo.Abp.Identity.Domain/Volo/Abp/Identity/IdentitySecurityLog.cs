@@ -1,5 +1,6 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Gdpr;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.SecurityLog;
@@ -10,24 +11,32 @@ public class IdentitySecurityLog : AggregateRoot<Guid>, IMultiTenant
 {
     public Guid? TenantId { get; protected set; }
 
+    [GdprData]
     public string ApplicationName { get; protected set; }
 
+    [GdprData]
     public string Identity { get; protected set; }
 
     public string Action { get; protected set; }
 
+    [GdprData]
     public Guid? UserId { get; protected set; }
 
+    [GdprData]
     public string UserName { get; protected set; }
 
+    [GdprData]
     public string TenantName { get; protected set; }
 
+    [GdprData]
     public string ClientId { get; protected set; }
 
     public string CorrelationId { get; protected set; }
 
+    [GdprData]
     public string ClientIpAddress { get; protected set; }
 
+    [GdprData]
     public string BrowserInfo { get; protected set; }
 
     public DateTime CreationTime { get; protected set; }

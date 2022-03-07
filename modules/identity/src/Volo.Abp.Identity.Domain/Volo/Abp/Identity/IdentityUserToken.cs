@@ -1,6 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Gdpr;
 using Volo.Abp.MultiTenancy;
 
 namespace Volo.Abp.Identity;
@@ -15,6 +16,7 @@ public class IdentityUserToken : Entity, IMultiTenant
     /// <summary>
     /// Gets or sets the primary key of the user that the token belongs to.
     /// </summary>
+    [GdprData]
     public virtual Guid UserId { get; protected set; }
 
     /// <summary>
@@ -25,11 +27,13 @@ public class IdentityUserToken : Entity, IMultiTenant
     /// <summary>
     /// Gets or sets the name of the token.
     /// </summary>
+    [GdprData]
     public virtual string Name { get; protected set; }
 
     /// <summary>
     /// Gets or sets the token value.
     /// </summary>
+    [GdprData]
     public virtual string Value { get; set; }
 
     protected IdentityUserToken()
