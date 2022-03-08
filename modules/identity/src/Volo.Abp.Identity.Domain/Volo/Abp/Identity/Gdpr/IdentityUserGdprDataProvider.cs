@@ -41,7 +41,7 @@ public class IdentityUserGdprDataProvider : IGdprDataProvider, ITransientDepende
         
         var files = new List<GdprFile> 
         {
-            new GdprFile("Personal Data", "application/json", personalData)
+            new GdprFile("Personal-Data.json", "application/json", personalData)
         };
 
         return files;

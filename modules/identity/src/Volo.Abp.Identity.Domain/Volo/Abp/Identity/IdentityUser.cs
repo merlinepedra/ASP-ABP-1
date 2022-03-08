@@ -26,7 +26,6 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser
     /// <summary>
     /// Gets or sets the normalized user name for this user.
     /// </summary>
-    [GdprData]
     [DisableAuditing]
     public virtual string NormalizedUserName { get; protected internal set; }
 
@@ -53,7 +52,6 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser
     /// <summary>
     /// Gets or sets the normalized email address for this user.
     /// </summary>
-    [GdprData]
     [DisableAuditing]
     public virtual string NormalizedEmail { get; protected internal set; }
 
