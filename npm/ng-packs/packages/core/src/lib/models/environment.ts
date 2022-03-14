@@ -1,7 +1,7 @@
 import { AuthConfig } from 'angular-oauth2-oidc';
 import { ABP } from './common';
 
-export interface Environment {
+export interface Environment<TCustomSettings = undefined> {
   apis: Apis;
   application: ApplicationInfo;
   hmr?: boolean;
@@ -10,6 +10,7 @@ export interface Environment {
   oAuthConfig: AuthConfig;
   production: boolean;
   remoteEnv?: RemoteEnv;
+  customSettings?: TCustomSettings
 }
 
 export interface ApplicationInfo {
