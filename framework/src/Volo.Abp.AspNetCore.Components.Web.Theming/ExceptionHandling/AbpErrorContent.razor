@@ -1,0 +1,17 @@
+@using Blazorise
+@using Microsoft.Extensions.Localization
+@using global::Localization.Resources.AbpUi
+@inject IStringLocalizer<AbpUiResource> L
+
+<Modal class="abp-error-boundary" @bind-Visible="@IsModalVisible" Closing="@OnModalClosing">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>@L["SomethingWentWrong"].Value</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <p>@CurrentException.Message</p>
+            <Button Color="Color.Success" Clicked="@(async () => await OnRefreshAsync())">@L["RefreshToPage"]</Button>
+            <Button Color="Color.Primary" Clicked="@(async () => await OnRecoverAsync())">@L["Recover"]</Button>
+        </ModalBody>
+    </ModalContent>
+</Modal>
