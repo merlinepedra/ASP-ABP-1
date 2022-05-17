@@ -18,13 +18,13 @@ dotnet tool update -g Volo.Abp.Cli
 
 ## Global Options
 
-While each command may have a set of options, there are some global options those can be used with any command;
+While each command may have a set of options, there are some global options that can be used with any command;
 
 * `--skip-cli-version-check`: Skips to check the latest version of the ABP CLI. If you don't specify, it will check the latest version and shows a warning message if there is a newer version of the ABP CLI.
 
 ## Commands
 
-Here, the list of all available commands before explaining their details:
+Here, is the list of all available commands before explaining their details:
 
 * **`help`**: Shows help on the usage of the ABP CLI.
 * **`new`**: Generates a new solution based on the ABP [startup templates](Startup-Templates/Index.md).
@@ -92,8 +92,10 @@ For more samples, go to [ABP CLI Create Solution Samples](CLI-New-Command-Sample
         * `--tiered`: Creates a tiered solution where Web and Http API layers are physically separated. If not specified, it creates a layered solution which is less complex and suitable for most scenarios.
       * `angular`: Angular UI. There are some additional options for this template:
         * `--separate-identity-server`: The Identity Server project comes as a separate project and runs at a different endpoint. It separates the Identity Server from the API Host application. If not specified, you will have a single endpoint in the server side.
+        * `--pwa`: Specifies the project as Progressive Web Application.
       * `blazor`: Blazor UI. There are some additional options for this template:
         * `--separate-identity-server`The Identity Server project comes as a separate project and runs at a different endpoint. It separates the Identity Server from the API Host application. If not specified, you will have a single endpoint in the server side.
+        * `--pwa`: Specifies the project as Progressive Web Application.
       * `blazor-server`: Blazor Server UI. There are some additional options for this template:
         * `--tiered`: The Identity Server and the API Host project comes as separate projects and run at different endpoints. It has 3 startup projects: *HttpApi.Host*, *IdentityServer* and *Blazor* and and each runs on different endpoints. If not specified, you will have a single endpoint for your web project.
       * `none`: Without UI. No front-end layer will be created. There are some additional options for this template:
@@ -298,7 +300,7 @@ abp generate-proxy -t <client-type> [options]
 Examples:
 
 ````bash
-abp generate-proxy -t ng
+abp generate-proxy -t ng -url https://localhost:44302/
 abp generate-proxy -t js -url https://localhost:44302/
 abp generate-proxy -t csharp -url https://localhost:44302/
 ````
@@ -312,12 +314,13 @@ abp generate-proxy -t csharp -url https://localhost:44302/
     * `--api-name` or `-a`: The name of the API endpoint defined in the `/src/environments/environment.ts`. Default value: `default`.
     * `--source` or `-s`: Specifies the Angular project name to resolve the root namespace & API definition URL from. Default value: `defaultProject`.
     * `--target`: Specifies the Angular project name to place generated code in. Default value: `defaultProject`.
+    * `--url`: Specifies api definition url. Default value is API Name's url in environment file.
     * `--prompt` or `-p`: Asks the options from the command line prompt (for the unspecified options).
   * `js`: JavaScript. work in the `*.Web` project directory. There are some additional options for this client:
     * `--output` or `-o`: JavaScript file path or folder to place generated code in.
 * `--module` or `-m`: Specifies the name of the backend module you wish to generate proxies for. Default value: `app`.
 * `--working-directory` or `-wd`: Execution directory. For `csharp` and `js` client types.
-* `--url` or `-u`: API definition URL from. For `csharp` and `js` client types.
+* `--url` or `-u`: API definition URL from.
 
 > See the [Angular Service Proxies document](UI/Angular/Service-Proxies.md) for more.
 
@@ -350,12 +353,13 @@ abp remove-proxy -t csharp --folder MyProxies/InnerFolder
     * `--api-name` or `-a`: The name of the API endpoint defined in the `/src/environments/environment.ts`. Default value: `default`.
     * `--source` or `-s`: Specifies the Angular project name to resolve the root namespace & API definition URL from. Default value: `defaultProject`.
     * `--target`: Specifies the Angular project name to place generated code in. Default value: `defaultProject`.
+    * `--url`: Specifies api definition url. Default value is API Name's url in environment file.
     * `--prompt` or `-p`: Asks the options from the command line prompt (for the unspecified options).
   * `js`: JavaScript. work in the `*.Web` project directory. There are some additional options for this client:
     * `--output` or `-o`: JavaScript file path or folder to place generated code in.
 * `--module` or `-m`: Specifies the name of the backend module you wish to generate proxies for. Default value: `app`.
 * `--working-directory` or `-wd`: Execution directory. For `csharp` and `js` client types.
-* `--url` or `-u`: API definition URL from. For `csharp` and `js` client types.
+* `--url` or `-u`: API definition URL from.
 
 > See the [Angular Service Proxies document](UI/Angular/Service-Proxies.md) for more.
 

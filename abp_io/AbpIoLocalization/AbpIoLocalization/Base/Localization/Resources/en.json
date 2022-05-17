@@ -26,6 +26,8 @@
     "Volo.AbpIo.Domain:030009": "User not found!",
     "Volo.AbpIo.Domain:030010": "To purchase the trial license, you first need to activate your trial license!",
     "Volo.AbpIo.Domain:030011": "You cannot delete a trial license when it is purchased!",
+    "Volo.AbpIo.Domain:070000": "The organization name can only contain latin letters, numbers, dots and hyphens!",
+    "Volo.AbpIo.Domain:070001": "The company name can only contain latin letters, numbers, dots, space and hyphens!",
     "WantToLearn?": "Want to learn?",
     "ReadyToGetStarted?": "Ready to get started?",
     "JoinOurCommunity": "Join our community",
@@ -119,6 +121,12 @@
     "Events": "Events",
     "Volo.AbpIo.Domain:080000": "There is already a purchase item named \"{Name}\"",
     "MasteringAbpFrameworkBook": "Book: Mastering ABP Framework",
-    "ABPIO-CommonPreferenceDefinition": "Get latest news about ABP Platform like new posts, events and more."
+    "ABPIO-CommonPreferenceDefinition": "Get the latest news about ABP Platform like new posts, events and more.",
+    "BuiltOn": "Built-on",
+    "AbpFramework": "ABP Framework",
+    "Volo.AbpIo.Domain:080001": "Start Time can not be greater than End Time",
+    "Enum:BookType:0": "Mastering ABP Framework",
+    "Enum:PurchasePlatform:0": "Amazon",
+    "Enum:PurchasePlatform:1": "Packt"
   }
 }
