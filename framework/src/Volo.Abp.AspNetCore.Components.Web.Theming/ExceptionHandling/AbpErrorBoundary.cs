@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Logging;
-using Volo.Abp.AspNetCore.Components.ExceptionHandling;
 
 namespace Volo.Abp.AspNetCore.Components.Web.Theming.ExceptionHandling;
 
@@ -19,6 +17,10 @@ public class AbpErrorBoundary : ErrorBoundaryBase
     protected override async Task OnErrorAsync(Exception exception)
     {
         await ErrorBoundaryLogger!.LogErrorAsync(exception);
+        if (exception.StackTrace.IsNullOrEmpty() || !exception.StackTrace!.Contains("BuildRenderTree(RenderTreeBuilder __builder)"))
+        {
+            return;
+        }
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -41,7 +43,7 @@ public class AbpErrorBoundary : ErrorBoundaryBase
         }
     }
 
-    protected virtual Task RefreshAsync()
+    protected virtual Task RefreshAsync() // We can take fallback uri as parameter
     {
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
         return Task.CompletedTask;
