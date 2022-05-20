@@ -11,16 +11,18 @@ public class AbpErrorBoundary : ErrorBoundaryBase
     [Inject] 
     protected IErrorBoundaryLogger? ErrorBoundaryLogger { get; set; }
 
-    [Inject]
+    [Inject] 
     protected NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnErrorAsync(Exception exception)
     {
-        await ErrorBoundaryLogger!.LogErrorAsync(exception);
-        if (exception.StackTrace.IsNullOrEmpty() || !exception.StackTrace!.Contains("BuildRenderTree(RenderTreeBuilder __builder)"))
+        if (!IsPageError(exception))
         {
+            // Ignore it
             return;
         }
+
+        await ErrorBoundaryLogger!.LogErrorAsync(exception);
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -28,6 +30,11 @@ public class AbpErrorBoundary : ErrorBoundaryBase
         if (CurrentException is null)
         {
             builder.AddContent(0, ChildContent);
+        }
+        else if (!IsPageError(CurrentException))
+        {
+            // Ignore it
+            return;
         }
         else if (ErrorContent is not null)
         {
@@ -53,5 +60,11 @@ public class AbpErrorBoundary : ErrorBoundaryBase
     {
         base.Recover();
         return Task.CompletedTask;
+    }
+
+    protected virtual bool IsPageError(Exception exception)
+    {
+        return !exception.StackTrace.IsNullOrEmpty() &&
+               exception.StackTrace!.Contains("BuildRenderTree(RenderTreeBuilder __builder)");
     }
 }
