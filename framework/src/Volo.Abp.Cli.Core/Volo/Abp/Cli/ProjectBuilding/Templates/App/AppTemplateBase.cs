@@ -177,21 +177,7 @@ public abstract class AppTemplateBase : TemplateInfo
         }
     }
 
-    protected void ConfigureTheme(ProjectBuildContext context)
-    {
-        if (context.BuildArgs.Theme.HasValue)
-        {
-            if (context.BuildArgs.Theme == Theme.LeptonXLite)
-            {
-                context.Symbols.Add("LEPTONX-LITE");
-            }
-
-            if (context.BuildArgs.Theme == Theme.Basic)
-            {
-                context.Symbols.Add("BASIC");
-            }
-        }
-    }
+    protected abstract void ConfigureTheme(ProjectBuildContext context);
 
     protected void ConfigurePublicWebSite(ProjectBuildContext context, List<ProjectBuildPipelineStep> steps)
     {
