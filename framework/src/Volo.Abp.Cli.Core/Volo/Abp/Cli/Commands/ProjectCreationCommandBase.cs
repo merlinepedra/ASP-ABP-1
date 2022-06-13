@@ -324,7 +324,7 @@ public abstract class ProjectCreationCommandBase
             return DatabaseProvider.MongoDb;
         }
 
-        throw new CliUsageException("The option you provided for Database Provider is invalid!");
+        throw new CliUsageException(ExceptionMessageHelper.GetInvalidArgExceptionMessage("Database Provider"));
     }
 
     protected virtual void RunGraphBuildForMicroserviceServiceTemplate(ProjectBuildArgs projectArgs)
@@ -418,7 +418,7 @@ public abstract class ProjectCreationCommandBase
             case "oracle":
                 return DatabaseManagementSystem.Oracle;
             default:
-                throw new CliUsageException("The option you provided for Database Management System is invalid!");
+                throw new CliUsageException(ExceptionMessageHelper.GetInvalidArgExceptionMessage("Database Management System"));
         }
     }
 
@@ -434,7 +434,7 @@ public abstract class ProjectCreationCommandBase
             case "react-native":
                 return MobileApp.ReactNative;
             default:
-                throw new CliUsageException("The option you provided for Mobile App is invalid!");
+                throw new CliUsageException(ExceptionMessageHelper.GetInvalidArgExceptionMessage("Mobile App"));
         }
     }
 
@@ -462,23 +462,43 @@ public abstract class ProjectCreationCommandBase
             case "blazor-server":
                 return UiFramework.BlazorServer;
             default:
-                throw new CliUsageException("The option you provided for UI Framework is invalid!");
+                throw new CliUsageException(ExceptionMessageHelper.GetInvalidArgExceptionMessage("UI Framework"));
         }
     }
 
     protected virtual Theme GetTheme(CommandLineArgs commandLineArgs)
     {
-        var optionValue = commandLineArgs.Options.GetOrNull(Options.Theme.Long);
-        switch (optionValue)
+        var theme = commandLineArgs.Options.GetOrNull(Options.Theme.Long);
+        var template = commandLineArgs.Options.GetOrNull(Options.Template.Long);
+        
+        Theme GetAppTheme()
         {
-            case null:
-            case "leptonx-lite":
-                return Theme.LeptonXLite;
-            case "basic":
-                return Theme.Basic;
-            default:
-                throw new CliUsageException("The option you provided for Theme is invalid!");
+            return theme switch
+            {
+                null => AppTemplate.DefaultTheme,
+                "leptonx-lite" => Theme.LeptonXLite,
+                "basic" => Theme.Basic,
+                _ => Theme.NotSpecified
+            };
         }
+    
+        Theme GetAppProTheme()
+        {
+            return theme switch
+            {
+                null => AppProTemplate.DefaultTheme,
+                "leptonx" => Theme.LeptonX,
+                "lepton" => Theme.Lepton,
+                _ => Theme.NotSpecified
+            };
+        }
+
+        return template switch
+        {
+            AppTemplate.TemplateName or null => GetAppTheme(),
+            AppProTemplate.TemplateName => GetAppProTheme(),
+            _ => throw new CliUsageException(ExceptionMessageHelper.GetInvalidArgExceptionMessage(Options.Theme.Long))
+        };
     }
 
     public static class Options
