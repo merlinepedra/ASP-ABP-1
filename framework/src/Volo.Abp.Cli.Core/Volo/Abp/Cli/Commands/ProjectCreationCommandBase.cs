@@ -93,7 +93,7 @@ public abstract class ProjectCreationCommandBase
             Logger.LogInformation("UI Framework: " + uiFramework);
         }
 
-        var theme = uiFramework == UiFramework.None ? (Theme?)null : GetTheme(commandLineArgs);
+        var theme = uiFramework == UiFramework.None ? (Theme?)null : GetTheme(commandLineArgs, template);
         if (theme.HasValue)
         {
             Logger.LogInformation("Theme: " + theme);
@@ -466,11 +466,10 @@ public abstract class ProjectCreationCommandBase
         }
     }
 
-    protected virtual Theme GetTheme(CommandLineArgs commandLineArgs)
+    protected virtual Theme GetTheme(CommandLineArgs commandLineArgs, string template)
     {
         var theme = commandLineArgs.Options.GetOrNull(Options.Theme.Long);
-        var template = commandLineArgs.Options.GetOrNull(Options.Template.Long);
-        
+
         Theme GetAppTheme()
         {
             return theme switch

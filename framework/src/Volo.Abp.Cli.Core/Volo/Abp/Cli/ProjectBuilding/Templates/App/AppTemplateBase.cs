@@ -33,7 +33,7 @@ public abstract class AppTemplateBase : TemplateInfo
         RemoveMigrations(context, steps);
         ConfigureTieredArchitecture(context, steps);
         ConfigurePublicWebSite(context, steps);
-        ConfigureTheme(context);
+        ConfigureTheme(context, steps);
         RemoveUnnecessaryPorts(context, steps);
         RandomizeSslPorts(context, steps);
         RandomizeStringEncryption(context, steps);
@@ -177,7 +177,7 @@ public abstract class AppTemplateBase : TemplateInfo
         }
     }
 
-    protected abstract void ConfigureTheme(ProjectBuildContext context);
+    protected abstract void ConfigureTheme(ProjectBuildContext context, List<ProjectBuildPipelineStep> steps);
 
     protected void ConfigurePublicWebSite(ProjectBuildContext context, List<ProjectBuildPipelineStep> steps)
     {

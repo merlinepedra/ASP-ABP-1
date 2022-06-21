@@ -1,4 +1,5 @@
-﻿using Volo.Abp.Cli.ProjectBuilding.Building;
+﻿using System.Collections.Generic;
+using Volo.Abp.Cli.ProjectBuilding.Building;
 
 namespace Volo.Abp.Cli.ProjectBuilding.Templates.App;
 
@@ -16,7 +17,7 @@ public class AppNoLayersTemplate : AppNoLayersTemplateBase
         //DocumentUrl = CliConsts.DocsLink + "/en/abp/latest/Startup-Templates/Application";
     }
 
-    protected override void ConfigureTheme(ProjectBuildContext context)
+    protected override void ConfigureTheme(ProjectBuildContext context, List<ProjectBuildPipelineStep> steps)
     {
         if (!context.BuildArgs.Theme.HasValue)
         {

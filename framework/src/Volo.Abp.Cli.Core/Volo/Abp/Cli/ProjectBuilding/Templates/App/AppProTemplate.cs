@@ -1,4 +1,6 @@
-﻿using Volo.Abp.Cli.ProjectBuilding.Building;
+﻿using System.Collections.Generic;
+using Volo.Abp.Cli.ProjectBuilding.Building;
+using Volo.Abp.Cli.ProjectBuilding.Building.Steps;
 
 namespace Volo.Abp.Cli.ProjectBuilding.Templates.App;
 
@@ -17,7 +19,7 @@ public class AppProTemplate : AppTemplateBase
         DocumentUrl = CliConsts.DocsLink + "/en/commercial/latest";
     }
 
-    protected override void ConfigureTheme(ProjectBuildContext context)
+    protected override void ConfigureTheme(ProjectBuildContext context, List<ProjectBuildPipelineStep> steps)
     {
         if (!context.BuildArgs.Theme.HasValue)
         {
@@ -32,6 +34,11 @@ public class AppProTemplate : AppTemplateBase
         if (context.BuildArgs.Theme == Theme.Lepton)
         {
             context.Symbols.Add("LEPTON");
+        }
+
+        if (DefaultTheme != context.BuildArgs.Theme)
+        {
+            steps.Add(new ChangeThemeStep());
         }
     }
 }

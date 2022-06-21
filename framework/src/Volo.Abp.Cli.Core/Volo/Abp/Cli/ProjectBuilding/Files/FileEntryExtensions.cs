@@ -8,6 +8,23 @@ public static class FileEntryExtensions
 {
     private static int _maximumRecursionCount  = 20;
     
+    public static void RemoveLineByContains(this FileEntry file, string text)
+    {
+        file.NormalizeLineEndings();
+        var newLines = new List<string>();
+        foreach (var line in file.GetLines())
+        {
+            if (line.Contains(text))
+            {
+                continue;
+            }
+            
+            newLines.Add(line);
+        }
+
+        file.SetLines(newLines);
+    }
+    
     public static FileEntry ReplaceText(this FileEntry file, string oldText, string newText)
     {
         file.NormalizeLineEndings();
